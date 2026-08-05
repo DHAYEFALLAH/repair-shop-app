@@ -1,21 +1,62 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar"
+<html dir="rtl" lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title data-i18n="title">ورشة الإصلاح</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    
-    <div class="lang-switch">
-        <button onclick="setLanguage('ar')">العربية</button>
-        <button onclick="setLanguage('fr')">Français</button>
+
+    <!-- ===== القائمة الجانبية (مع زر تسجيل الخروج) ===== -->
+    <nav class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <h2><i class="fas fa-tools"></i> 
+            <span data-i18n="menuTitle">ورشة الإصلاح</span></h2>
+        </div>
+
+        <a class="menu-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+            <i class="fas fa-home"></i> <span data-i18n="menuDashboard">الرئيسية</span>
+        </a>
+        <a class="menu-item" data-page="repairs" onclick="navigateTo('repairs')">
+            <i class="fas fa-clipboard-list"></i> <span data-i18n="menuRepairs">الطلبات</span>
+        </a>
+        <a class="menu-item" data-page="clients" onclick="navigateTo('clients')">
+            <i class="fas fa-users"></i> <span data-i18n="menuClients">العملاء</span>
+        </a>
+        <a class="menu-item" data-page="inventory" onclick="navigateTo('inventory')">
+            <i class="fas fa-boxes"></i> <span data-i18n="menuInventory">المخزون</span>
+        </a>
+        <a class="menu-item" data-page="settings" onclick="navigateTo('settings')">
+            <i class="fas fa-cog"></i> <span data-i18n="menuSettings">الإعدادات</span>
+        </a>
+
+        <!-- زر تسجيل الخروج -->
+        <div class="menu-divider"></div>
+        <a class="menu-item logout-item" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">تسجيل الخروج</span>
+        </a>
+    </nav>
+
+    <!-- ===== المحتوى الرئيسي ===== -->
+    <div class="main-content" id="mainContent">
+        <button class="menu-toggle" id="menuToggle" onclick="toggleSideMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="page-content" id="pageContent">
+            <h1 data-i18n="title">ورشة الإصلاح</h1>
+            <p data-i18n="subtitle">تسيير طلبات إصلاح الهواتف و الحواسيب</p>
+            <div class="page-placeholder">
+                <p data-i18n="welcome">مرحباً بك في ورشة الإصلاح – يمكنك من خلال القائمة الجانبية إدارة جميع عملياتك.</p>
+            </div>
+        </div>
     </div>
 
-    <h1 data-i18n="title">ورشة الإصلاح</h1>
-    <p data-i18n="subtitle">تسيير طلبات إصلاح الهواتف و الحواسيب</p>
-
+    <!-- ===== السكريبتات ===== -->
     <script src="js/i18n.js"></script>
-
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>

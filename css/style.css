@@ -1,0 +1,421 @@
+/* ----- إعدادات عامة ----- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f4f7fc;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ----- القائمة الجانبية (تتغير حسب الاتجاه) ----- */
+.side-menu {
+    position: fixed;
+    top: 0;
+    width: 260px;
+    height: 100%;
+    background: #1e2a4a;
+    color: #fff;
+    padding: 20px 0;
+    transition: left 0.3s ease, right 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* الوضع RTL (عربي) - القائمة على اليمين */
+[dir="rtl"] .side-menu {
+    right: 0;
+    left: auto;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* الوضع LTR (فرنسي) - القائمة على اليسار */
+[dir="ltr"] .side-menu {
+    left: 0;
+    right: auto;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== للشاشات الصغيرة ===== */
+@media (max-width: 768px) {
+    .side-menu {
+        width: 280px;
+    }
+    /* في RTL: نخفي القائمة بإخراجها لليمين */
+    [dir="rtl"] .side-menu {
+        right: -280px;   /* تنزلق خارج الشاشة */
+        left: auto;
+    }
+    /* في LTR: نخفي القائمة بإخراجها لليسار */
+    [dir="ltr"] .side-menu {
+        left: -280px;
+        right: auto;
+    }
+    /* عند إضافة الكلاس open، نعيدها إلى مكانها */
+    [dir="rtl"] .side-menu.open {
+        right: 0;
+    }
+    [dir="ltr"] .side-menu.open {
+        left: 0;
+    }
+}
+
+/* ----- باقي التنسيقات ----- */
+.menu-header {
+    padding: 10px 25px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 15px;
+}
+.menu-header h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.menu-header h2 i {
+    color: #f0b34b;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 25px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+/* RTL: تمييز على اليمين */
+[dir="rtl"] .menu-item {
+    border-right: 3px solid transparent;
+    border-left: none;
+}
+[dir="rtl"] .menu-item:hover,
+[dir="rtl"] .menu-item.active {
+    border-right-color: #f0b34b;
+}
+
+/* LTR: تمييز على اليسار */
+[dir="ltr"] .menu-item {
+    border-left: 3px solid transparent;
+    border-right: none;
+}
+[dir="ltr"] .menu-item:hover,
+[dir="ltr"] .menu-item.active {
+    border-left-color: #f0b34b;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.menu-item i {
+    width: 22px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.lang-section {
+    margin-top: auto;
+    padding: 20px 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.lang-section button {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+    min-width: 60px;
+}
+.lang-section button:hover {
+    background: #f0b34b;
+    color: #1e2a4a;
+}
+.lang-section button.active-lang {
+    background: #f0b34b;
+    color: #1e2a4a;
+    font-weight: 600;
+}
+
+/* ----- المحتوى الرئيسي ----- */
+.main-content {
+    flex: 1;
+    padding: 25px 30px;
+    min-height: 100vh;
+    transition: margin 0.3s ease;
+}
+
+/* RTL: المحتوى له مسافة من اليمين */
+[dir="rtl"] .main-content {
+    margin-right: 260px;
+    margin-left: 0;
+}
+
+/* LTR: المحتوى له مسافة من اليسار */
+[dir="ltr"] .main-content {
+    margin-left: 260px;
+    margin-right: 0;
+}
+
+@media (max-width: 768px) {
+    [dir="rtl"] .main-content,
+    [dir="ltr"] .main-content {
+        margin: 0;
+        padding: 15px;
+    }
+}
+
+/* زر فتح القائمة (للجوال) */
+.menu-toggle {
+    display: none;
+    background: #1e2a4a;
+    color: #fff;
+    border: none;
+    font-size: 1.8rem;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: 0.2s;
+}
+.menu-toggle:hover {
+    background: #2c3d66;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: inline-block;
+    }
+}
+
+.page-content {
+    background: #fff;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+    margin-top: 10px;
+}
+.page-content h1 {
+    font-size: 2rem;
+    color: #1e2a4a;
+    margin-bottom: 8px;
+}
+.page-content p {
+    color: #4b5b7a;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+/* ===== تنسيقات صفحة الإعدادات ===== */
+.settings-container {
+    margin-top: 30px;
+    max-width: 300px;
+}
+
+.settings-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #1e2a4a;
+}
+
+.language-select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background: #fff;
+    color: #1e2a4a;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: auto; /* يظهر السهم الافتراضي في كل المتصفحات */
+}
+
+.language-select:hover {
+    border-color: #1e2a4a;
+}
+
+.language-select:focus {
+    outline: none;
+    border-color: #f0b34b;
+    box-shadow: 0 0 0 3px rgba(240, 179, 75, 0.2);
+}
+
+.settings-info {
+    margin-top: 30px;
+    background: #f8faff;
+    padding: 20px;
+    border-radius: 12px;
+    color: #4b5b7a;
+    line-height: 1.6;
+}
+
+/* ===== تنسيقات الصفحات الأخرى (placeholder) ===== */
+.page-placeholder {
+    margin-top: 30px;
+    background: #f8faff;
+    padding: 20px;
+    border-radius: 12px;
+    color: #4b5b7a;
+}
+
+/* تحسين التوافق مع RTL */
+[dir="rtl"] .language-select {
+    text-align: right;
+    padding-right: 14px;
+    padding-left: 14px;
+}
+
+[dir="ltr"] .language-select {
+    text-align: left;
+}
+
+/* ===== صفحة الدخول المستقلة ===== */
+.login-page {
+    background: #f4f7fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px 35px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-icon {
+    font-size: 3rem;
+    color: #f0b34b;
+    margin-bottom: 10px;
+}
+
+.login-header h2 {
+    color: #1e2a4a;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #1e2a4a;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #f0b34b;
+    box-shadow: 0 0 0 3px rgba(240, 179, 75, 0.2);
+}
+
+.login-error {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 10px 0 15px;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: #1e2a4a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.login-btn:hover {
+    background: #2c3d66;
+}
+
+.login-btn:active {
+    transform: scale(0.98);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* ===== زر تسجيل الخروج ===== */
+.menu-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 10px 25px;
+}
+
+.logout-item {
+    color: #f87171 !important;
+    margin-top: 5px;
+}
+
+.logout-item:hover {
+    background: rgba(248, 113, 113, 0.15) !important;
+    color: #fca5a5 !important;
+    border-color: #f87171 !important;
+}
