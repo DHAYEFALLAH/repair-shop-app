@@ -16,7 +16,17 @@ const translations = {
     password: "كلمة المرور",
     loginButton: "دخول",
     loginHint: "استخدم admin / admin",
-    loginError: "اسم المستخدم أو كلمة المرور غير صحيحة"
+    loginError: "اسم المستخدم أو كلمة المرور غير صحيحة",
+    clientsTitle: "العملاء",
+    clientsSubtitle: "إدارة بيانات العملاء",
+    addClient: "إضافة عميل جديد",
+    clientName: "الاسم",
+    clientPhone: "الهاتف",
+    clientEmail: "البريد الإلكتروني",
+    addBtn: "إضافة",
+    clientsList: "قائمة العملاء",
+    noClients: "لا يوجد عملاء مسجلون حتى الآن",
+    actions: "إجراءات"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -35,7 +45,17 @@ const translations = {
     password: "Mot de passe",
     loginButton: "Se connecter",
     loginHint: "Utilisez admin / admin",
-    loginError: "Nom d'utilisateur ou mot de passe incorrect"
+    loginError: "Nom d'utilisateur ou mot de passe incorrect",
+    clientsTitle: "Clients",
+    clientsSubtitle: "Gestion des clients",
+    addClient: "Ajouter un client",
+    clientName: "Nom",
+    clientPhone: "Téléphone",
+    clientEmail: "Email",
+    addBtn: "Ajouter",
+    clientsList: "Liste des clients",
+    noClients: "Aucun client enregistré pour le moment",
+    actions: "Actions"
   }
 };
 

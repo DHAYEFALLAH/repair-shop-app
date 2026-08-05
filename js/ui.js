@@ -43,42 +43,118 @@ function navigateTo(page) {
 
     let innerHTML = '';
 
-    if (page === 'settings') {
-        // ===== صفحة الإعدادات مع قائمة منسدلة للغة =====
-        const selected = lang;
-        innerHTML = `
-            <h1 data-i18n="menuSettings">${dict.menuSettings}</h1>
-            <p data-i18n="settingsSubtitle">${(lang === 'ar') ? 'اختر لغة التطبيق' : 'Choisissez la langue de l\'application'}</p>
-            <div class="settings-container">
-                <label for="languageSelect" class="settings-label">
-                    ${(lang === 'ar') ? 'اللغة' : 'Langue'}
-                </label>
-                <select id="languageSelect" class="language-select">
-                    <option value="ar" ${selected === 'ar' ? 'selected' : ''}>العربية</option>
-                    <option value="fr" ${selected === 'fr' ? 'selected' : ''}>Français</option>
-                </select>
-            </div>
-            <div class="settings-info">
-                <p>${(lang === 'ar') ? 'يمكنك تغيير اللغة في أي وقت، وسيتم حفظ اختيارك تلقائياً.' : 'Vous pouvez changer la langue à tout moment, votre choix sera sauvegardé automatiquement.'}</p>
-            </div>
-        `;
-    } else {
-        // باقي الصفحات
-        const titles = {
-            dashboard: { ar: 'الرئيسية', fr: 'Accueil' },
-            repairs: { ar: 'الطلبات', fr: 'Demandes' },
-            clients: { ar: 'العملاء', fr: 'Clients' },
-            inventory: { ar: 'المخزون', fr: 'Stock' }
-        };
-        const pageName = titles[page]?.[lang] || page;
-        innerHTML = `
-            <h1>${pageName}</h1>
-            <p data-i18n="subtitle">${(lang === 'ar') ? 'هذه صفحة ' + pageName : 'Ceci est la page ' + pageName}</p>
-            <div class="page-placeholder">
-                <p>${(lang === 'ar') ? 'محتوى الصفحة قيد التطوير...' : 'Contenu de la page en cours de développement...'}</p>
-            </div>
-        `;
+    switch (page) {
+        case 'settings':
+             // ===== صفحة الإعدادات مع قائمة منسدلة للغة =====
+            const selected = lang;
+            innerHTML = `
+                <h1 data-i18n="menuSettings">${dict.menuSettings}</h1>
+                <p data-i18n="settingsSubtitle">${(lang === 'ar') ? 'اختر لغة التطبيق' : 'Choisissez la langue de l\'application'}</p>
+                <div class="settings-container">
+                     <label for="languageSelect" class="settings-label">
+                        ${(lang === 'ar') ? 'اللغة' : 'Langue'}
+                     </label>
+                    <select id="languageSelect" class="language-select">
+                        <option value="ar" ${selected === 'ar' ? 'selected' : ''}>العربية</option>
+                        <option value="fr" ${selected === 'fr' ? 'selected' : ''}>Français</option>
+                    </select>
+                 </div>
+                 <div class="settings-info">
+                        <p>${(lang === 'ar') ? 'يمكنك تغيير اللغة في أي وقت، وسيتم حفظ اختيارك تلقائياً.' : 'Vous pouvez changer la langue à tout moment, votre choix sera sauvegardé automatiquement.'}</p>
+                 </div>
+            `;
+
+            break;
+
+        case 'clients':
+            // ===== صفحة العملاء =====
+            const clients = getClients();
+            innerHTML = `
+                <h1 data-i18n="clientsTitle">${dict.clientsTitle}</h1>
+                <p data-i18n="clientsSubtitle">${dict.clientsSubtitle}</p>
+
+                <!-- نموذج إضافة عميل -->
+                <div class="client-form-container">
+                    <h3 data-i18n="addClient">${dict.addClient}</h3>
+                    <form id="clientForm" onsubmit="return addClient(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="clientName" data-i18n="clientName">${dict.clientName}</label>
+                                <input type="text" id="clientName" required placeholder="${(lang === 'ar') ? 'الاسم الكامل' : 'Nom complet'}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="clientPhone" data-i18n="clientPhone">${dict.clientPhone}</label>
+                                <input type="tel" id="clientPhone" required placeholder="${(lang === 'ar') ? 'رقم الهاتف' : 'Téléphone'}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="clientEmail" data-i18n="clientEmail">${dict.clientEmail}</label>
+                            <input type="email" id="clientEmail" placeholder="${(lang === 'ar') ? 'البريد الإلكتروني (اختياري)' : 'Email (optionnel)'}" />
+                        </div>
+                        <button type="submit" class="btn-primary" data-i18n="addBtn">${dict.addBtn}</button>
+                    </form>
+                </div>
+
+                <!-- قائمة العملاء -->
+                <div class="clients-list">
+                    <h3 data-i18n="clientsList">${dict.clientsList}</h3>
+                    ${clients.length === 0 ? `<p class="no-clients">${dict.noClients}</p>` : `
+                    <div class="table-wrapper">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th data-i18n="clientName">${dict.clientName}</th>
+                                    <th data-i18n="clientPhone">${dict.clientPhone}</th>
+                                    <th data-i18n="clientEmail">${dict.clientEmail}</th>
+                                    <th data-i18n="actions">${dict.actions}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${clients.map((c, index) => `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>${c.name}</td>
+                                        <td>${c.phone}</td>
+                                        <td>${c.email || '-'}</td>
+                                        <td>
+                                            <button class="btn-danger" onclick="deleteClient(${c.id})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    `}
+                </div>
+            `;
+            break;
+
+        default:
+            // باقي الصفحات (dashboard, repairs, inventory)
+            const titles = {
+                dashboard: { ar: 'الرئيسية', fr: 'Accueil' },
+                repairs: { ar: 'الطلبات', fr: 'Demandes' },
+                inventory: { ar: 'المخزون', fr: 'Stock' }
+            };
+            const pageName = titles[page]?.[lang] || page;
+            innerHTML = `
+                <h1>${pageName}</h1>
+                <p data-i18n="subtitle">${(lang === 'ar') ? 'هذه صفحة ' + pageName : 'Ceci est la page ' + pageName}</p>
+                <div class="page-placeholder">
+                    <p>${(lang === 'ar') ? 'محتوى الصفحة قيد التطوير...' : 'Contenu de la page en cours de développement...'}</p>
+                </div>
+            `;
+            break;
+
+
+
     }
+
+
+
 
     content.innerHTML = innerHTML;
 
@@ -99,6 +175,74 @@ function navigateTo(page) {
         });
     }
 }
+
+// ==========================================
+// دوال إدارة العملاء (Clients CRUD)
+// ==========================================
+
+const CLIENTS_STORAGE_KEY = 'clients';
+
+/**
+ * الحصول على قائمة العملاء من localStorage
+ */
+function getClients() {
+    const data = localStorage.getItem(CLIENTS_STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+/**
+ * حفظ قائمة العملاء في localStorage
+ */
+function saveClients(clients) {
+    localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(clients));
+}
+
+/**
+ * إضافة عميل جديد
+ */
+function addClient(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const email = document.getElementById('clientEmail').value.trim();
+
+    if (!name || !phone) {
+        alert('الرجاء ملء جميع الحقول المطلوبة');
+        return false;
+    }
+
+    const clients = getClients();
+    const newClient = {
+        id: Date.now(), // معرف فريد
+        name: name,
+        phone: phone,
+        email: email || ''
+    };
+    clients.push(newClient);
+    saveClients(clients);
+
+    // إعادة تحميل صفحة العملاء لتحديث القائمة
+    navigateTo('clients');
+    return false;
+}
+
+/**
+ * حذف عميل بواسطة المعرف
+ */
+function deleteClient(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
+
+    let clients = getClients();
+    clients = clients.filter(c => c.id !== id);
+    saveClients(clients);
+
+    // إعادة تحميل صفحة العملاء
+    navigateTo('clients');
+}
+
+// ==========================================
+
 
 /**
  * تهيئة القائمة عند تحميل الصفحة
