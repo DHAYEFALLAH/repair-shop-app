@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ورشة الإصلاح</title>
+    <title data-i18n="title">ورشة الإصلاح</title>
 </head>
 <body>
+    
+    <div class="lang-switch">
+        <button onclick="setLanguage('ar')">العربية</button>
+        <button onclick="setLanguage('fr')">Français</button>
+    </div>
 
-    <h1>ورشة الإصلاح</h1>
-    <p>تسيير طلبات إصلاح الهواتف و الحواسيب</p>
+    <h1 data-i18n="title">ورشة الإصلاح</h1>
+    <p data-i18n="subtitle">تسيير طلبات إصلاح الهواتف و الحواسيب</p>
+
+    <script src="js/i18n.js"></script>
 
 </body>
 </html>
