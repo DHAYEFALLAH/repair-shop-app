@@ -69,6 +69,38 @@ function navigateTo(page) {
         case 'clients':
             // ===== صفحة العملاء =====
             const clients = getClients();
+
+            // ==== نموذج تعديل مخفي ====
+            const editClientHtml = `
+                <div id="editClientModal" class="modal-overlay" style="display: none;">
+                    <div class="modal-content">
+                        <h3 data-i18n="editClient">${dict.editClient}</h3>
+                        <form id="editClientForm" onsubmit="return updateClient(event)">
+                            <input type="hidden" id="editClientId" />
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="editClientName" data-i18n="clientName">${dict.clientName}</label>
+                                    <input type="text" id="editClientName" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="editClientPhone" data-i18n="clientPhone">${dict.clientPhone}</label>
+                                    <input type="tel" id="editClientPhone" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="editClientEmail" data-i18n="clientEmail">${dict.clientEmail}</label>
+                                <input type="email" id="editClientEmail" />
+                            </div>
+                            <div class="modal-actions">
+                                <button type="submit" class="btn-primary" data-i18n="updateBtn">${dict.updateBtn}</button>
+                                <button type="button" class="btn-secondary" onclick="closeEditModal()" data-i18n="cancelBtn">${dict.cancelBtn}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            //===============================================
+
             innerHTML = `
                 <h1 data-i18n="clientsTitle">${dict.clientsTitle}</h1>
                 <p data-i18n="clientsSubtitle">${dict.clientsSubtitle}</p>
@@ -118,6 +150,9 @@ function navigateTo(page) {
                                         <td>${c.phone}</td>
                                         <td>${c.email || '-'}</td>
                                         <td>
+                                            <button class="btn-edit" onclick="editClient(${c.id})" title="${dict.edit}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
                                             <button class="btn-danger" onclick="deleteClient(${c.id})">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -239,6 +274,57 @@ function deleteClient(id) {
 
     // إعادة تحميل صفحة العملاء
     navigateTo('clients');
+}
+
+/**
+ * فتح نموذج تعديل العميل
+ */
+function editClient(id) {
+    const clients = getClients();
+    const client = clients.find(c => c.id === id);
+    if (!client) return;
+
+    document.getElementById('editClientId').value = client.id;
+    document.getElementById('editClientName').value = client.name;
+    document.getElementById('editClientPhone').value = client.phone;
+    document.getElementById('editClientEmail').value = client.email || '';
+
+    document.getElementById('editClientModal').style.display = 'flex';
+}
+
+/**
+ * إغلاق نموذج التعديل
+ */
+function closeEditModal() {
+    document.getElementById('editClientModal').style.display = 'none';
+}
+
+/**
+ * تحديث بيانات العميل
+ */
+function updateClient(event) {
+    event.preventDefault();
+
+    const id = parseInt(document.getElementById('editClientId').value);
+    const name = document.getElementById('editClientName').value.trim();
+    const phone = document.getElementById('editClientPhone').value.trim();
+    const email = document.getElementById('editClientEmail').value.trim();
+
+    if (!name || !phone) {
+        alert('الرجاء ملء جميع الحقول المطلوبة');
+        return false;
+    }
+
+    let clients = getClients();
+    const index = clients.findIndex(c => c.id === id);
+    if (index === -1) return false;
+
+    clients[index] = { id, name, phone, email: email || '' };
+    saveClients(clients);
+
+    closeEditModal();
+    navigateTo('clients');
+    return false;
 }
 
 // ==========================================

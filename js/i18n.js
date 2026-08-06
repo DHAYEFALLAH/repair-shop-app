@@ -26,7 +26,12 @@ const translations = {
     addBtn: "إضافة",
     clientsList: "قائمة العملاء",
     noClients: "لا يوجد عملاء مسجلون حتى الآن",
-    actions: "إجراءات"
+    actions: "إجراءات",
+    edit: "تعديل",
+    delete: "حذف",
+    editClient: "تعديل بيانات العميل",
+    updateBtn: "تحديث",
+    cancelBtn: "إلغاء"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -55,7 +60,12 @@ const translations = {
     addBtn: "Ajouter",
     clientsList: "Liste des clients",
     noClients: "Aucun client enregistré pour le moment",
-    actions: "Actions"
+    actions: "Actions",
+    edit: "Modifier",
+    delete: "Supprimer",
+    editClient: "Modifier le client",
+    updateBtn: "Mettre à jour",
+    cancelBtn: "Annuler"
   }
 };
 

@@ -55,3 +55,10 @@ if (document.getElementById('sideMenu')) {
     // نحن في index.html
     checkAuth();
 }
+
+// إذا كنا في صفحة الدخول وهو مسجل دخول أصلاً، نوجهه للرئيسية مباشرة
+if (document.getElementById('loginForm')) {
+    if (localStorage.getItem(AUTH_STORAGE_KEY) === 'true') {
+        window.location.href = 'index.html';
+    }
+}
