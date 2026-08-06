@@ -375,6 +375,72 @@ function navigateTo(page) {
             break;
         }
 
+        case 'dashboard': {
+            const clientsList = getClients();
+            const repairs = getRepairs();
+            const parts = getParts();
+
+            const activeRepairs = repairs.filter(r => r.status !== 'delivered').length;
+            const readyRepairs = repairs.filter(r => r.status === 'ready').length;
+            const revenue = repairs
+                .filter(r => r.status === 'delivered')
+                .reduce((sum, r) => sum + (parseFloat(r.cost) || 0), 0);
+            const lowStockCount = parts.filter(p => p.quantity <= 5).length;
+
+            const statusKeyMap = {
+                received: 'statusReceived',
+                diagnosing: 'statusDiagnosing',
+                repairing: 'statusRepairing',
+                waiting_parts: 'statusWaitingParts',
+                ready: 'statusReady',
+                delivered: 'statusDelivered'
+            };
+
+            const recent = [...repairs].sort((a, b) => b.createdAt - a.createdAt).slice(0, 5);
+
+            innerHTML = `
+                <h1 data-i18n="title">${dict.title}</h1>
+                <p data-i18n="welcome">${dict.welcome}</p>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">${activeRepairs}</div>
+                        <div class="stat-label" data-i18n="statActiveRepairs">${dict.statActiveRepairs}</div>
+                    </div>
+                    <div class="stat-box success">
+                        <div class="stat-number">${readyRepairs}</div>
+                        <div class="stat-label" data-i18n="statReady">${dict.statReady}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">${revenue.toLocaleString()}</div>
+                        <div class="stat-label" data-i18n="statRevenue">${dict.statRevenue}</div>
+                    </div>
+                    <div class="stat-box ${lowStockCount > 0 ? 'warn' : ''}">
+                        <div class="stat-number">${lowStockCount}</div>
+                        <div class="stat-label" data-i18n="statLowStock">${dict.statLowStock}</div>
+                    </div>
+                </div>
+
+                <div class="recent-section">
+                    <h3 data-i18n="recentRepairs">${dict.recentRepairs}</h3>
+                    ${recent.length === 0 ? `<p class="no-clients" data-i18n="noRecentRepairs">${dict.noRecentRepairs}</p>` : recent.map(r => {
+                        const clientObj = clientsList.find(c => c.id === r.clientId);
+                        const clientName = clientObj ? clientObj.name : '-';
+                        return `
+                            <div class="recent-item">
+                                <div class="recent-main">
+                                    <span class="recent-client">${clientName}</span>
+                                    <span class="recent-device">${r.deviceModel || ''} — ${r.issue}</span>
+                                </div>
+                                <span class="status-badge status-${r.status}">${dict[statusKeyMap[r.status]]}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            break;
+        }
+
         default:
             // باقي الصفحات (dashboard, repairs, inventory)
             const titles = {

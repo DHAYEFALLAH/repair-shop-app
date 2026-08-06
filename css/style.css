@@ -813,3 +813,88 @@ body {
     margin-right: 0;
     margin-left: 6px;
 }
+
+
+/* ===== لوحة الإحصائيات (Dashboard) ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 20px 0 30px;
+}
+
+@media (max-width: 900px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    border-right: 4px solid #f0b34b;
+}
+
+[dir="ltr"] .stat-box {
+    border-right: none;
+    border-left: 4px solid #f0b34b;
+}
+
+.stat-box .stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e2a4a;
+}
+
+.stat-box .stat-label {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.stat-box.warn { border-color: #dc2626; }
+.stat-box.warn .stat-number { color: #dc2626; }
+
+.stat-box.success { border-color: #16a34a; }
+.stat-box.success .stat-number { color: #16a34a; }
+
+.recent-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 25px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.recent-section h3 {
+    color: #1e2a4a;
+    margin-bottom: 15px;
+    font-size: 1.15rem;
+}
+
+.recent-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.recent-item:last-child {
+    border-bottom: none;
+}
+
+.recent-item .recent-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.recent-item .recent-client {
+    font-weight: 600;
+    color: #1e2a4a;
+}
+
+.recent-item .recent-device {
+    font-size: 0.85rem;
+    color: #6b7280;
+}

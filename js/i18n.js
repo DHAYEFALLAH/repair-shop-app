@@ -70,7 +70,16 @@ const translations = {
     partsList: "قائمة القطع",
     noParts: "لا توجد قطع مسجلة حتى الآن",
     lowStock: "مخزون منخفض",
-    totalValue: "القيمة الإجمالية للمخزون"
+    totalValue: "القيمة الإجمالية للمخزون",
+
+    // ===== لوحة الإحصائيات =====
+    statActiveRepairs: "طلبات نشطة",
+    statReady: "جاهزة للاستلام",
+    statRevenue: "إيرادات الطلبات المسلَّمة",
+    statClients: "إجمالي العملاء",
+    statLowStock: "قطع بمخزون منخفض",
+    recentRepairs: "آخر الطلبات",
+    noRecentRepairs: "لا توجد طلبات بعد"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -143,7 +152,16 @@ const translations = {
     partsList: "Liste des pièces",
     noParts: "Aucune pièce enregistrée pour le moment",
     lowStock: "Stock faible",
-    totalValue: "Valeur totale du stock"
+    totalValue: "Valeur totale du stock",
+
+    // ===== Tableau de bord =====
+    statActiveRepairs: "Réparations actives",
+    statReady: "Prêtes à récupérer",
+    statRevenue: "Revenus des réparations livrées",
+    statClients: "Total clients",
+    statLowStock: "Pièces en stock faible",
+    recentRepairs: "Dernières demandes",
+    noRecentRepairs: "Aucune demande pour le moment"
   }
 };
 
