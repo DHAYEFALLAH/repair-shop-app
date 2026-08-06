@@ -25,6 +25,9 @@ const translations = {
     clientEmail: "البريد الإلكتروني",
     addBtn: "إضافة",
     clientsList: "قائمة العملاء",
+    // ===== رسائل التحذير والتأكيد للزبائن =====
+    confirmDeleteClients: "هل أنت متأكد من حذف هذا العميل؟",
+    deleteClientHasRepairs: "لا يمكن حذف هذا العميل لأنه مرتبط بـ {count} طلب(ات). قم بحذف الطلبات أولاً.",
     noClients: "لا يوجد عملاء مسجلون حتى الآن",
     actions: "إجراءات",
     edit: "تعديل",
@@ -107,6 +110,9 @@ const translations = {
     clientEmail: "Email",
     addBtn: "Ajouter",
     clientsList: "Liste des clients",
+     // ===== Messages d'alerte et de confirmation pour les clients =====
+    confirmDeleteClients: "Êtes-vous sûr de vouloir supprimer ce client ?",
+    deleteClientHasRepairs: "Impossible de supprimer ce client car il est associé à {count} demande(s). Supprimez d'abord les demandes.",
     noClients: "Aucun client enregistré pour le moment",
     actions: "Actions",
     edit: "Modifier",

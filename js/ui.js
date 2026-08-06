@@ -535,18 +535,31 @@ function addClient(event) {
 }
 
 /**
- * حذف عميل بواسطة المعرف
+ * حذف عميل بواسطة المعرف مع التحقق من الطلبات المرتبطة
  */
 function deleteClient(id) {
-    if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
-
+    const repairs = getRepairs();
+    const clientRepairs = repairs.filter(r => r.clientId === id);
+    
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+    
+    // حالة 1: لديه طلبات
+    if (clientRepairs.length > 0) {
+        // استبدال {count} بعدد الطلبات
+        const msg = dict.deleteClientHasRepairs.replace('{count}',clientRepairs.length);
+        alert(msg);
+        return;
+    }
+    
+    // حالة 2: ليس لديه أي طلبات => حذف عادي
+    if (!confirm(dict.confirmDeleteClients)) return;
     let clients = getClients();
     clients = clients.filter(c => c.id !== id);
     saveClients(clients);
-
-    // إعادة تحميل صفحة العملاء
     navigateTo('clients');
 }
+//==================================================
 
 /**
  * فتح نموذج تعديل العميل
