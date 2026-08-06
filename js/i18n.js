@@ -58,7 +58,19 @@ const translations = {
     repairsList: "قائمة الطلبات",
     noRepairs: "لا توجد طلبات إصلاح حتى الآن",
     device: "الجهاز",
-    client: "العميل"
+    client: "العميل",
+
+    // ===== المخزون =====
+    inventoryTitle: "المخزون",
+    inventorySubtitle: "إدارة قطع الغيار والمستلزمات",
+    addPart: "إضافة قطعة جديدة",
+    partName: "اسم القطعة",
+    partQuantity: "الكمية",
+    partPrice: "سعر الوحدة",
+    partsList: "قائمة القطع",
+    noParts: "لا توجد قطع مسجلة حتى الآن",
+    lowStock: "مخزون منخفض",
+    totalValue: "القيمة الإجمالية للمخزون"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -119,7 +131,19 @@ const translations = {
     repairsList: "Liste des demandes",
     noRepairs: "Aucune demande de réparation pour le moment",
     device: "Appareil",
-    client: "Client"
+    client: "Client",
+
+    // ===== Stock =====
+    inventoryTitle: "Stock",
+    inventorySubtitle: "Gestion des pièces et fournitures",
+    addPart: "Ajouter une pièce",
+    partName: "Nom de la pièce",
+    partQuantity: "Quantité",
+    partPrice: "Prix unitaire",
+    partsList: "Liste des pièces",
+    noParts: "Aucune pièce enregistrée pour le moment",
+    lowStock: "Stock faible",
+    totalValue: "Valeur totale du stock"
   }
 };
 

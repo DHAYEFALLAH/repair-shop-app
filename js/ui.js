@@ -289,11 +289,96 @@ function navigateTo(page) {
             break;
         }
 
+        case 'inventory': {
+            // ===== صفحة المخزون =====
+            const LOW_STOCK_THRESHOLD = 5;
+            const parts = getParts();
+            const totalValue = parts.reduce((sum, p) => sum + (p.quantity * p.price), 0);
+
+            innerHTML = `
+                <h1 data-i18n="inventoryTitle">${dict.inventoryTitle}</h1>
+                <p data-i18n="inventorySubtitle">${dict.inventorySubtitle}</p>
+
+                <div class="client-form-container">
+                    <h3 data-i18n="addPart">${dict.addPart}</h3>
+                    <form id="partForm" onsubmit="return addPart(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="partName" data-i18n="partName">${dict.partName}</label>
+                                <input type="text" id="partName" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="partQuantity" data-i18n="partQuantity">${dict.partQuantity}</label>
+                                <input type="number" id="partQuantity" min="0" value="0" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="partPrice" data-i18n="partPrice">${dict.partPrice}</label>
+                            <input type="number" id="partPrice" min="0" step="0.01" value="0" required />
+                        </div>
+                        <button type="submit" class="btn-primary" data-i18n="addBtn">${dict.addBtn}</button>
+                    </form>
+                </div>
+
+                ${parts.length > 0 ? `
+                <div class="parts-summary">
+                    <span data-i18n="totalValue">${dict.totalValue}</span>
+                    <span class="value">${totalValue.toLocaleString()}</span>
+                </div>` : ''}
+
+                <div class="clients-list">
+                    <h3 data-i18n="partsList">${dict.partsList}</h3>
+                    ${parts.length === 0 ? `<p class="no-clients" data-i18n="noParts">${dict.noParts}</p>` : `
+                    <div class="table-wrapper">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th data-i18n="partName">${dict.partName}</th>
+                                    <th data-i18n="partQuantity">${dict.partQuantity}</th>
+                                    <th data-i18n="partPrice">${dict.partPrice}</th>
+                                    <th data-i18n="actions">${dict.actions}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${parts.map((p, index) => {
+                                    const isLow = p.quantity <= LOW_STOCK_THRESHOLD;
+                                    return `
+                                        <tr class="${isLow ? 'low-stock-row' : ''}">
+                                            <td>${index + 1}</td>
+                                            <td>
+                                                ${isLow ? `<span class="low-stock-badge" data-i18n="lowStock">${dict.lowStock}</span>` : ''}
+                                                ${p.name}
+                                            </td>
+                                            <td>
+                                                <div class="qty-control">
+                                                    <button type="button" class="qty-btn" onclick="adjustPartQuantity(${p.id}, -1)">−</button>
+                                                    <span class="qty-value">${p.quantity}</span>
+                                                    <button type="button" class="qty-btn" onclick="adjustPartQuantity(${p.id}, 1)">+</button>
+                                                </div>
+                                            </td>
+                                            <td>${p.price.toLocaleString()}</td>
+                                            <td>
+                                                <button class="btn-danger" onclick="deletePart(${p.id})">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    `}
+                </div>
+            `;
+            break;
+        }
+
         default:
             // باقي الصفحات (dashboard, repairs, inventory)
             const titles = {
-                dashboard: { ar: 'الرئيسية', fr: 'Accueil' },
-                inventory: { ar: 'المخزون', fr: 'Stock' }
+                dashboard: { ar: 'الرئيسية', fr: 'Accueil' }
             };
             const pageName = titles[page]?.[lang] || page;
             innerHTML = `
@@ -512,6 +597,65 @@ function updateRepairStatus(id, newStatus) {
     repair.status = newStatus;
     saveRepairs(repairs);
     navigateTo('repairs');
+}
+// ==========================================
+
+
+// ==========================================
+// دوال إدارة المخزون (Inventory CRUD)
+// ==========================================
+
+const PARTS_STORAGE_KEY = 'parts';
+
+function getParts() {
+    const data = localStorage.getItem(PARTS_STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+function saveParts(parts) {
+    localStorage.setItem(PARTS_STORAGE_KEY, JSON.stringify(parts));
+}
+
+function addPart(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('partName').value.trim();
+    const quantity = parseInt(document.getElementById('partQuantity').value);
+    const price = parseFloat(document.getElementById('partPrice').value);
+
+    if (!name) {
+        alert('الرجاء إدخال اسم القطعة');
+        return false;
+    }
+
+    const parts = getParts();
+    parts.push({
+        id: Date.now(),
+        name: name,
+        quantity: quantity || 0,
+        price: price || 0
+    });
+    saveParts(parts);
+
+    navigateTo('inventory');
+    return false;
+}
+
+function deletePart(id) {
+    if (!confirm('هل أنت متأكد من حذف هذه القطعة؟')) return;
+    let parts = getParts();
+    parts = parts.filter(p => p.id !== id);
+    saveParts(parts);
+    navigateTo('inventory');
+}
+
+function adjustPartQuantity(id, delta) {
+    const parts = getParts();
+    const part = parts.find(p => p.id === id);
+    if (!part) return;
+    part.quantity = Math.max(0, part.quantity + delta);
+    saveParts(parts);
+    navigateTo('inventory');
 }
 // ==========================================
 

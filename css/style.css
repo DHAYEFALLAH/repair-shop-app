@@ -738,3 +738,78 @@ body {
     cursor: pointer;
     background: #fff;
 }
+
+/* ===== صفحة المخزون ===== */
+.parts-summary {
+    background: #f8faff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.05rem;
+    color: #1e2a4a;
+    font-weight: 600;
+}
+
+.parts-summary span.value {
+    color: #f0b34b;
+    font-size: 1.3rem;
+}
+
+/* أزرار زيادة/نقص الكمية */
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #1e2a4a;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.15s;
+}
+
+.qty-btn:hover {
+    background: #1e2a4a;
+    color: #fff;
+}
+
+.qty-value {
+    min-width: 26px;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* صف بمخزون منخفض */
+.low-stock-row td {
+    background: #fef2f2 !important;
+}
+
+.low-stock-badge {
+    display: inline-block;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 12px;
+    margin-right: 6px;
+}
+
+[dir="ltr"] .low-stock-badge {
+    margin-right: 0;
+    margin-left: 6px;
+}
