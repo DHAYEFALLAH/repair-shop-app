@@ -169,11 +169,130 @@ function navigateTo(page) {
             `;
             break;
 
+            case 'repairs': {
+            // ===== صفحة الطلبات/التذاكر =====
+            const clientsList = getClients();
+            const repairs = getRepairs();
+
+            // إذا ما كايناش عملاء، ما نقدروش نضيفو طلب
+            if (clientsList.length === 0) {
+                innerHTML = `
+                    <h1 data-i18n="repairsTitle">${dict.repairsTitle}</h1>
+                    <p data-i18n="repairsSubtitle">${dict.repairsSubtitle}</p>
+                    <div class="warning-box" data-i18n="noClientsWarning">${dict.noClientsWarning}</div>
+                `;
+                break;
+            }
+
+            const deviceTypes = [
+                { value: 'phone', key: 'deviceTypePhone' },
+                { value: 'laptop', key: 'deviceTypeLaptop' },
+                { value: 'desktop', key: 'deviceTypeDesktop' },
+                { value: 'tablet', key: 'deviceTypeTablet' },
+                { value: 'other', key: 'deviceTypeOther' }
+            ];
+
+            const statusList = ['received', 'diagnosing', 'repairing', 'waiting_parts', 'ready', 'delivered'];
+            const statusKeyMap = {
+                received: 'statusReceived',
+                diagnosing: 'statusDiagnosing',
+                repairing: 'statusRepairing',
+                waiting_parts: 'statusWaitingParts',
+                ready: 'statusReady',
+                delivered: 'statusDelivered'
+            };
+
+            innerHTML = `
+                <h1 data-i18n="repairsTitle">${dict.repairsTitle}</h1>
+                <p data-i18n="repairsSubtitle">${dict.repairsSubtitle}</p>
+
+                <div class="client-form-container">
+                    <h3 data-i18n="addRepair">${dict.addRepair}</h3>
+                    <form id="repairForm" onsubmit="return addRepair(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="repairClient" data-i18n="selectClient">${dict.selectClient}</label>
+                                <select id="repairClient" required>
+                                    ${clientsList.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="repairDeviceType" data-i18n="deviceType">${dict.deviceType}</label>
+                                <select id="repairDeviceType">
+                                    ${deviceTypes.map(d => `<option value="${d.value}">${dict[d.key]}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="repairDeviceModel" data-i18n="deviceModel">${dict.deviceModel}</label>
+                                <input type="text" id="repairDeviceModel" placeholder="${lang === 'ar' ? 'مثال: iPhone 12' : 'ex: iPhone 12'}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="repairCost" data-i18n="estimatedCost">${dict.estimatedCost}</label>
+                                <input type="number" id="repairCost" min="0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="repairIssue" data-i18n="issueDescription">${dict.issueDescription}</label>
+                            <input type="text" id="repairIssue" required />
+                        </div>
+                        <button type="submit" class="btn-primary" data-i18n="addBtn">${dict.addBtn}</button>
+                    </form>
+                </div>
+
+                <div class="clients-list">
+                    <h3 data-i18n="repairsList">${dict.repairsList}</h3>
+                    ${repairs.length === 0 ? `<p class="no-clients" data-i18n="noRepairs">${dict.noRepairs}</p>` : `
+                    <div class="table-wrapper">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th data-i18n="client">${dict.client}</th>
+                                    <th data-i18n="device">${dict.device}</th>
+                                    <th data-i18n="issueDescription">${dict.issueDescription}</th>
+                                    <th data-i18n="repairStatus">${dict.repairStatus}</th>
+                                    <th data-i18n="actions">${dict.actions}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${repairs.map((r, index) => {
+                                    const clientObj = clientsList.find(c => c.id === r.clientId);
+                                    const clientName = clientObj ? clientObj.name : '-';
+                                    const deviceLabel = dict[deviceTypes.find(d => d.value === r.deviceType)?.key] || r.deviceType;
+                                    return `
+                                        <tr>
+                                            <td>${index + 1}</td>
+                                            <td>${clientName}</td>
+                                            <td>${deviceLabel} — ${r.deviceModel || ''}</td>
+                                            <td>${r.issue}</td>
+                                            <td>
+                                                <select class="status-select status-${r.status}" onchange="updateRepairStatus(${r.id}, this.value)">
+                                                    ${statusList.map(s => `<option value="${s}" ${r.status === s ? 'selected' : ''}>${dict[statusKeyMap[s]]}</option>`).join('')}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button class="btn-danger" onclick="deleteRepair(${r.id})">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    `}
+                </div>
+            `;
+            break;
+        }
+
         default:
             // باقي الصفحات (dashboard, repairs, inventory)
             const titles = {
                 dashboard: { ar: 'الرئيسية', fr: 'Accueil' },
-                repairs: { ar: 'الطلبات', fr: 'Demandes' },
                 inventory: { ar: 'المخزون', fr: 'Stock' }
             };
             const pageName = titles[page]?.[lang] || page;
@@ -329,6 +448,71 @@ function updateClient(event) {
     return false;
 }
 
+// ==========================================
+
+
+// ==========================================
+// دوال إدارة طلبات الإصلاح (Repairs CRUD)
+// ==========================================
+
+const REPAIRS_STORAGE_KEY = 'repairs';
+
+function getRepairs() {
+    const data = localStorage.getItem(REPAIRS_STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+function saveRepairs(repairs) {
+    localStorage.setItem(REPAIRS_STORAGE_KEY, JSON.stringify(repairs));
+}
+
+function addRepair(event) {
+    event.preventDefault();
+
+    const clientId = parseInt(document.getElementById('repairClient').value);
+    const deviceType = document.getElementById('repairDeviceType').value;
+    const deviceModel = document.getElementById('repairDeviceModel').value.trim();
+    const cost = document.getElementById('repairCost').value;
+    const issue = document.getElementById('repairIssue').value.trim();
+
+    if (!issue) {
+        alert('الرجاء وصف العطل');
+        return false;
+    }
+
+    const repairs = getRepairs();
+    repairs.push({
+        id: Date.now(),
+        clientId: clientId,
+        deviceType: deviceType,
+        deviceModel: deviceModel,
+        cost: cost || 0,
+        issue: issue,
+        status: 'received',
+        createdAt: Date.now()
+    });
+    saveRepairs(repairs);
+
+    navigateTo('repairs');
+    return false;
+}
+
+function deleteRepair(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا الطلب؟')) return;
+    let repairs = getRepairs();
+    repairs = repairs.filter(r => r.id !== id);
+    saveRepairs(repairs);
+    navigateTo('repairs');
+}
+
+function updateRepairStatus(id, newStatus) {
+    const repairs = getRepairs();
+    const repair = repairs.find(r => r.id === id);
+    if (!repair) return;
+    repair.status = newStatus;
+    saveRepairs(repairs);
+    navigateTo('repairs');
+}
 // ==========================================
 
 

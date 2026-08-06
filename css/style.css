@@ -674,3 +674,67 @@ body {
 [dir="rtl"] .modal-actions {
     justify-content: flex-start;
 }
+
+/* ===== حالة طلب الإصلاح (Status Badges) ===== */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-received   { background: #e0e7ff; color: #4338ca; }
+.status-diagnosing { background: #fef3c7; color: #b45309; }
+.status-repairing  { background: #d1fae5; color: #047857; }
+.status-waiting_parts { background: #ffedd5; color: #c2410c; }
+.status-ready       { background: #dcfce7; color: #15803d; }
+.status-delivered   { background: #f1f5f9; color: #64748b; }
+
+/* قائمة اختيار الحالة/العميل/نوع الجهاز داخل نموذج الإضافة */
+.client-form-container select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fff;
+    cursor: pointer;
+}
+
+.client-form-container select:focus {
+    outline: none;
+    border-color: #f0b34b;
+    box-shadow: 0 0 0 3px rgba(240, 179, 75, 0.2);
+}
+
+/* شارة تنبيه (لا يوجد عملاء) */
+.warning-box {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+/* تحديد سريع لحالة الطلب مباشرة من الجدول */
+.status-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: #fff;
+}

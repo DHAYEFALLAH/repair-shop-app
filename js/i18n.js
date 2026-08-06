@@ -31,7 +31,34 @@ const translations = {
     delete: "حذف",
     editClient: "تعديل بيانات العميل",
     updateBtn: "تحديث",
-    cancelBtn: "إلغاء"
+    cancelBtn: "إلغاء",
+
+    // ===== الطلبات/التذاكر =====
+    repairsTitle: "طلبات الإصلاح",
+    repairsSubtitle: "متابعة أجهزة الزبائن قيد الإصلاح",
+    addRepair: "إضافة طلب جديد",
+    selectClient: "اختر العميل",
+    noClientsWarning: "لا يوجد عملاء مسجلون. أضف عميلاً أولاً من صفحة العملاء.",
+    deviceType: "نوع الجهاز",
+    deviceTypePhone: "هاتف",
+    deviceTypeLaptop: "حاسوب محمول",
+    deviceTypeDesktop: "حاسوب مكتبي",
+    deviceTypeTablet: "تابلت",
+    deviceTypeOther: "أخرى",
+    deviceModel: "الماركة والموديل",
+    issueDescription: "وصف العطل",
+    estimatedCost: "التكلفة التقديرية",
+    repairStatus: "الحالة",
+    statusReceived: "تم الاستلام",
+    statusDiagnosing: "قيد الفحص",
+    statusRepairing: "قيد الإصلاح",
+    statusWaitingParts: "بانتظار قطع الغيار",
+    statusReady: "جاهز للاستلام",
+    statusDelivered: "تم التسليم",
+    repairsList: "قائمة الطلبات",
+    noRepairs: "لا توجد طلبات إصلاح حتى الآن",
+    device: "الجهاز",
+    client: "العميل"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -65,7 +92,34 @@ const translations = {
     delete: "Supprimer",
     editClient: "Modifier le client",
     updateBtn: "Mettre à jour",
-    cancelBtn: "Annuler"
+    cancelBtn: "Annuler",
+
+    // ===== Réparations =====
+    repairsTitle: "Demandes de réparation",
+    repairsSubtitle: "Suivi des appareils des clients en réparation",
+    addRepair: "Ajouter une demande",
+    selectClient: "Choisir un client",
+    noClientsWarning: "Aucun client enregistré. Ajoutez d'abord un client.",
+    deviceType: "Type d'appareil",
+    deviceTypePhone: "Téléphone",
+    deviceTypeLaptop: "Ordinateur portable",
+    deviceTypeDesktop: "Ordinateur de bureau",
+    deviceTypeTablet: "Tablette",
+    deviceTypeOther: "Autre",
+    deviceModel: "Marque et modèle",
+    issueDescription: "Description de la panne",
+    estimatedCost: "Coût estimé",
+    repairStatus: "Statut",
+    statusReceived: "Reçu",
+    statusDiagnosing: "Diagnostic en cours",
+    statusRepairing: "En réparation",
+    statusWaitingParts: "En attente de pièces",
+    statusReady: "Prêt",
+    statusDelivered: "Livré",
+    repairsList: "Liste des demandes",
+    noRepairs: "Aucune demande de réparation pour le moment",
+    device: "Appareil",
+    client: "Client"
   }
 };
 
