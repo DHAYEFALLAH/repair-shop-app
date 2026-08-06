@@ -164,6 +164,8 @@ function navigateTo(page) {
                     </div>
                     `}
                 </div>
+
+                ${editClientHtml}
             `;
             break;
 
