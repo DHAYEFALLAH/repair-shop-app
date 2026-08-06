@@ -28,6 +28,7 @@ const translations = {
     // ===== رسائل التحذير والتأكيد للزبائن =====
     confirmDeleteClients: "هل أنت متأكد من حذف هذا العميل؟",
     deleteClientHasRepairs: "لا يمكن حذف هذا العميل لأنه مرتبط بـ {count} طلب(ات). قم بحذف الطلبات أولاً.",
+    clientDeleted: "تم حذف العميل بنجاح",
     noClients: "لا يوجد عملاء مسجلون حتى الآن",
     actions: "إجراءات",
     edit: "تعديل",
@@ -35,6 +36,8 @@ const translations = {
     editClient: "تعديل بيانات العميل",
     updateBtn: "تحديث",
     cancelBtn: "إلغاء",
+    confirmBtn: "تأكيد",
+    okBtn: "موافق",
 
     // ===== الطلبات/التذاكر =====
     repairsTitle: "طلبات الإصلاح",
@@ -62,6 +65,8 @@ const translations = {
     noRepairs: "لا توجد طلبات إصلاح حتى الآن",
     device: "الجهاز",
     client: "العميل",
+    confirmDeleteRepair: "هل أنت متأكد من حذف هذا الطلب؟",
+    repairDeleted: "تم حذف الطلب بنجاح",
 
     // ===== المخزون =====
     inventoryTitle: "المخزون",
@@ -74,6 +79,8 @@ const translations = {
     noParts: "لا توجد قطع مسجلة حتى الآن",
     lowStock: "مخزون منخفض",
     totalValue: "القيمة الإجمالية للمخزون",
+    confirmDeletePart: "هل أنت متأكد من حذف هذه القطعة؟",
+    partDeleted: "تم حذف القطعة بنجاح",
 
     // ===== لوحة الإحصائيات =====
     statActiveRepairs: "طلبات نشطة",
@@ -113,6 +120,7 @@ const translations = {
      // ===== Messages d'alerte et de confirmation pour les clients =====
     confirmDeleteClients: "Êtes-vous sûr de vouloir supprimer ce client ?",
     deleteClientHasRepairs: "Impossible de supprimer ce client car il est associé à {count} demande(s). Supprimez d'abord les demandes.",
+    clientDeleted: "Client supprimé avec succès",
     noClients: "Aucun client enregistré pour le moment",
     actions: "Actions",
     edit: "Modifier",
@@ -120,6 +128,8 @@ const translations = {
     editClient: "Modifier le client",
     updateBtn: "Mettre à jour",
     cancelBtn: "Annuler",
+    confirmBtn: "Confirmer",
+    okBtn: "OK",
 
     // ===== Réparations =====
     repairsTitle: "Demandes de réparation",
@@ -147,6 +157,8 @@ const translations = {
     noRepairs: "Aucune demande de réparation pour le moment",
     device: "Appareil",
     client: "Client",
+    confirmDeleteRepair: "Êtes-vous sûr de supprimer cette demande ?",
+    repairDeleted: "Demande supprimée avec succès",
 
     // ===== Stock =====
     inventoryTitle: "Stock",
@@ -159,6 +171,8 @@ const translations = {
     noParts: "Aucune pièce enregistrée pour le moment",
     lowStock: "Stock faible",
     totalValue: "Valeur totale du stock",
+    confirmDeletePart: "Êtes-vous sûr de supprimer cette pièce ?",
+    partDeleted: "Pièce supprimée avec succès",
 
     // ===== Tableau de bord =====
     statActiveRepairs: "Réparations actives",

@@ -483,6 +483,73 @@ function navigateTo(page) {
     }
 }
 
+
+
+// ==========================================
+// دوال SweetAlert2 (نوافذ منبثقة احترافية)
+// ==========================================
+
+/**
+ * عرض نافذة تأكيد (حذف، عمليات خطيرة)
+ * @param {string} message - النص المعروض
+ * @param {function} onConfirm - الدالة المنفذة عند التأكيد
+ */
+function showConfirmDialog(message, onConfirm) {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    Swal.fire({
+        title: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: dict.confirmBtn || 'تأكيد',
+        cancelButtonText: dict.cancelBtn || 'إلغاء',
+        reverseButtons: lang === 'ar' // في العربية: تأكيد على اليمين
+    }).then((result) => {
+        if (result.isConfirmed && onConfirm) {
+            onConfirm();
+        }
+    });
+}
+
+/**
+ * عرض نافذة تنبيه (رسائل خطأ أو تحذير)
+ * @param {string} message - النص المعروض
+ * @param {string} icon - نوع الأيقونة: 'error', 'warning', 'info', 'success'
+ */
+function showAlert(message, icon = 'error') {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    Swal.fire({
+        title: message,
+        icon: icon,
+        confirmButtonColor: '#1e2a4a',
+        confirmButtonText: dict.okBtn || 'موافق'
+    });
+}
+
+/**
+ * عرض نافذة نجاح (عملية ناجحة)
+ * @param {string} message - النص المعروض
+ */
+function showSuccess(message) {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    Swal.fire({
+        title: message,
+        icon: 'success',
+        confirmButtonColor: '#16a34a',
+        confirmButtonText: dict.okBtn || 'موافق',
+        timer: 2000,
+        timerProgressBar: true
+    });
+}
+
+
 // ==========================================
 // دوال إدارة العملاء (Clients CRUD)
 // ==========================================
@@ -548,16 +615,19 @@ function deleteClient(id) {
     if (clientRepairs.length > 0) {
         // استبدال {count} بعدد الطلبات
         const msg = dict.deleteClientHasRepairs.replace('{count}',clientRepairs.length);
-        alert(msg);
+        showAlert(msg,'error');
         return;
     }
     
     // حالة 2: ليس لديه أي طلبات => حذف عادي
-    if (!confirm(dict.confirmDeleteClients)) return;
-    let clients = getClients();
-    clients = clients.filter(c => c.id !== id);
-    saveClients(clients);
-    navigateTo('clients');
+    showConfirmDialog(dict.confirmDeleteClients,function() {
+        let clients = getClients();
+        clients = clients.filter(c => c.id !== id);
+        saveClients(clients);
+        navigateTo('clients');
+        showSuccess(dict.clientDeleted || 'تم حذف العميل بنجاح.');
+    })
+    
 }
 //==================================================
 
@@ -662,11 +732,17 @@ function addRepair(event) {
 }
 
 function deleteRepair(id) {
-    if (!confirm('هل أنت متأكد من حذف هذا الطلب؟')) return;
-    let repairs = getRepairs();
-    repairs = repairs.filter(r => r.id !== id);
-    saveRepairs(repairs);
-    navigateTo('repairs');
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    showConfirmDialog(dict.confirmDeleteRepair,function() {
+        let repairs = getRepairs();
+        repairs = repairs.filter(r => r.id !== id);
+        saveRepairs(repairs);
+        navigateTo('repairs');
+        showSuccess(dict.repairDeleted || 'تم حذف الطلب بنجاح');
+    })
+    
 }
 
 function updateRepairStatus(id, newStatus) {
@@ -721,11 +797,16 @@ function addPart(event) {
 }
 
 function deletePart(id) {
-    if (!confirm('هل أنت متأكد من حذف هذه القطعة؟')) return;
-    let parts = getParts();
-    parts = parts.filter(p => p.id !== id);
-    saveParts(parts);
-    navigateTo('inventory');
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+    
+    showConfirmDialog(dict.confirmDeletePart, function() {
+        let parts = getParts();
+        parts = parts.filter(p => p.id !== id);
+        saveParts(parts);
+        navigateTo('inventory');
+        showSuccess(dict.partDeleted || 'تم حذف القطعة بنجاح');
+    });
 }
 
 function adjustPartQuantity(id, delta) {
