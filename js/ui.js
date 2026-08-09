@@ -292,7 +292,7 @@ async function navigateTo(page) {
         case 'inventory': {
             // ===== صفحة المخزون =====
             const LOW_STOCK_THRESHOLD = 5;
-            const parts = getParts();
+            const parts = await getParts();
             const totalValue = parts.reduce((sum, p) => sum + (p.quantity * p.price), 0);
 
             innerHTML = `
@@ -352,14 +352,14 @@ async function navigateTo(page) {
                                             </td>
                                             <td>
                                                 <div class="qty-control">
-                                                    <button type="button" class="qty-btn" onclick="adjustPartQuantity(${p.id}, -1)">−</button>
+                                                    <button type="button" class="qty-btn" onclick="adjustPartQuantity('${p.id}', -1)">−</button>
                                                     <span class="qty-value">${p.quantity}</span>
-                                                    <button type="button" class="qty-btn" onclick="adjustPartQuantity(${p.id}, 1)">+</button>
+                                                    <button type="button" class="qty-btn" onclick="adjustPartQuantity('${p.id}', 1)">+</button>
                                                 </div>
                                             </td>
                                             <td>${p.price.toLocaleString()}</td>
                                             <td>
-                                                <button class="btn-danger" onclick="deletePart(${p.id})">
+                                                <button class="btn-danger" onclick="deletePart('${p.id}')">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -378,7 +378,7 @@ async function navigateTo(page) {
         case 'dashboard': {
             const clientsList = await getClients();
             const repairs = await getRepairs();
-            const parts = getParts();
+            const parts = await getParts();
 
             const activeRepairs = repairs.filter(r => r.status !== 'delivered').length;
             const readyRepairs = repairs.filter(r => r.status === 'ready').length;
@@ -712,22 +712,17 @@ async function updateRepairStatus(id, newStatus) {
 // ==========================================
 
 
+
 // ==========================================
-// دوال إدارة المخزون (Inventory CRUD)
+// دوال إدارة المخزون (Inventory CRUD) — عبر Firestore
 // ==========================================
 
-const PARTS_STORAGE_KEY = 'parts';
-
-function getParts() {
-    const data = localStorage.getItem(PARTS_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+async function getParts() {
+    const snapshot = await db.collection('parts').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
-function saveParts(parts) {
-    localStorage.setItem(PARTS_STORAGE_KEY, JSON.stringify(parts));
-}
-
-function addPart(event) {
+async function addPart(event) {
     event.preventDefault();
 
     const name = document.getElementById('partName').value.trim();
@@ -735,18 +730,15 @@ function addPart(event) {
     const price = parseFloat(document.getElementById('partPrice').value);
 
     if (!name) {
-        alert('الرجاء إدخال اسم القطعة');
+        showAlert('الرجاء إدخال اسم القطعة', 'warning');
         return false;
     }
 
-    const parts = getParts();
-    parts.push({
-        id: Date.now(),
+    await db.collection('parts').add({
         name: name,
         quantity: quantity || 0,
         price: price || 0
     });
-    saveParts(parts);
 
     navigateTo('inventory');
     return false;
@@ -755,22 +747,21 @@ function addPart(event) {
 function deletePart(id) {
     const lang = document.documentElement.lang || 'ar';
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
-    
-    showConfirmDialog(dict.confirmDeletePart, function() {
-        let parts = getParts();
-        parts = parts.filter(p => p.id !== id);
-        saveParts(parts);
+
+    showConfirmDialog(dict.confirmDeletePart, async function () {
+        await db.collection('parts').doc(id).delete();
         navigateTo('inventory');
         showSuccess(dict.partDeleted || 'تم حذف القطعة بنجاح');
     });
 }
 
-function adjustPartQuantity(id, delta) {
-    const parts = getParts();
-    const part = parts.find(p => p.id === id);
-    if (!part) return;
-    part.quantity = Math.max(0, part.quantity + delta);
-    saveParts(parts);
+async function adjustPartQuantity(id, delta) {
+    const doc = await db.collection('parts').doc(id).get();
+    if (!doc.exists) return;
+    const currentQuantity = doc.data().quantity || 0;
+    const newQuantity = Math.max(0, currentQuantity + delta);
+
+    await db.collection('parts').doc(id).update({ quantity: newQuantity });
     navigateTo('inventory');
 }
 // ==========================================
