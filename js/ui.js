@@ -29,7 +29,7 @@ function setupAutoCloseMenu() {
 /**
  * التنقل بين الصفحات (محاكاة)
  */
-function navigateTo(page) {
+async function navigateTo(page) {
     // تحديث العنصر النشط في القائمة
     document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
     const activeItem = document.querySelector(`.menu-item[data-page="${page}"]`);
@@ -68,7 +68,7 @@ function navigateTo(page) {
 
         case 'clients':
             // ===== صفحة العملاء =====
-            const clients = getClients();
+            const clients = await getClients();
 
             // ==== نموذج تعديل مخفي ====
             const editClientHtml = `
@@ -150,10 +150,10 @@ function navigateTo(page) {
                                         <td>${c.phone}</td>
                                         <td>${c.email || '-'}</td>
                                         <td>
-                                            <button class="btn-edit" onclick="editClient(${c.id})" title="${dict.edit}">
+                                            <button class="btn-edit" onclick="editClient('${c.id}')" title="${dict.edit}">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button class="btn-danger" onclick="deleteClient(${c.id})">
+                                            <button class="btn-danger" onclick="deleteClient('${c.id}')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -171,7 +171,7 @@ function navigateTo(page) {
 
             case 'repairs': {
             // ===== صفحة الطلبات/التذاكر =====
-            const clientsList = getClients();
+            const clientsList = await getClients();
             const repairs = getRepairs();
 
             // إذا ما كايناش عملاء، ما نقدروش نضيفو طلب
@@ -376,7 +376,7 @@ function navigateTo(page) {
         }
 
         case 'dashboard': {
-            const clientsList = getClients();
+            const clientsList = await getClients();
             const repairs = getRepairs();
             const parts = getParts();
 
@@ -550,31 +550,21 @@ function showSuccess(message) {
 }
 
 
+
+
 // ==========================================
-// دوال إدارة العملاء (Clients CRUD)
+// دوال إدارة العملاء (Clients CRUD) — عبر Firestore
 // ==========================================
 
-const CLIENTS_STORAGE_KEY = 'clients';
-
-/**
- * الحصول على قائمة العملاء من localStorage
- */
-function getClients() {
-    const data = localStorage.getItem(CLIENTS_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
-}
-
-/**
- * حفظ قائمة العملاء في localStorage
- */
-function saveClients(clients) {
-    localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(clients));
+async function getClients() {
+    const snapshot = await db.collection('clients').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
 /**
  * إضافة عميل جديد
  */
-function addClient(event) {
+async function addClient(event) {
     event.preventDefault();
 
     const name = document.getElementById('clientName').value.trim();
@@ -582,21 +572,12 @@ function addClient(event) {
     const email = document.getElementById('clientEmail').value.trim();
 
     if (!name || !phone) {
-        alert('الرجاء ملء جميع الحقول المطلوبة');
+        showAlert('الرجاء ملء جميع الحقول المطلوبة', 'warning');
         return false;
     }
 
-    const clients = getClients();
-    const newClient = {
-        id: Date.now(), // معرف فريد
-        name: name,
-        phone: phone,
-        email: email || ''
-    };
-    clients.push(newClient);
-    saveClients(clients);
+    await db.collection('clients').add({ name, phone, email: email || '' });
 
-    // إعادة تحميل صفحة العملاء لتحديث القائمة
     navigateTo('clients');
     return false;
 }
@@ -604,40 +585,35 @@ function addClient(event) {
 /**
  * حذف عميل بواسطة المعرف مع التحقق من الطلبات المرتبطة
  */
-function deleteClient(id) {
-    const repairs = getRepairs();
+async function deleteClient(id) {
+    const repairs = getRepairs(); // مازالت فـ localStorage دابا، رح نبدلوها فـ الخطوة الجاية
     const clientRepairs = repairs.filter(r => r.clientId === id);
-    
+
     const lang = document.documentElement.lang || 'ar';
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
-    
-    // حالة 1: لديه طلبات
+
+    // حالة 1: عندو طلبات مرتبطة
     if (clientRepairs.length > 0) {
-        // استبدال {count} بعدد الطلبات
-        const msg = dict.deleteClientHasRepairs.replace('{count}',clientRepairs.length);
-        showAlert(msg,'error');
+        const msg = dict.deleteClientHasRepairs.replace('{count}', clientRepairs.length);
+        showAlert(msg, 'error');
         return;
     }
-    
-    // حالة 2: ليس لديه أي طلبات => حذف عادي
-    showConfirmDialog(dict.confirmDeleteClients,function() {
-        let clients = getClients();
-        clients = clients.filter(c => c.id !== id);
-        saveClients(clients);
+
+    // حالة 2: بلا طلبات => نأكدو الحذف، وكي يجاوب المستخدم بـ "نعم"، نحذفو من Firestore
+    showConfirmDialog(dict.confirmDeleteClients, async function () {
+        await db.collection('clients').doc(id).delete();
         navigateTo('clients');
         showSuccess(dict.clientDeleted || 'تم حذف العميل بنجاح.');
-    })
-    
+    });
 }
-//==================================================
 
 /**
  * فتح نموذج تعديل العميل
  */
-function editClient(id) {
-    const clients = getClients();
-    const client = clients.find(c => c.id === id);
-    if (!client) return;
+async function editClient(id) {
+    const doc = await db.collection('clients').doc(id).get();
+    if (!doc.exists) return;
+    const client = { id: doc.id, ...doc.data() };
 
     document.getElementById('editClientId').value = client.id;
     document.getElementById('editClientName').value = client.name;
@@ -657,25 +633,20 @@ function closeEditModal() {
 /**
  * تحديث بيانات العميل
  */
-function updateClient(event) {
+async function updateClient(event) {
     event.preventDefault();
 
-    const id = parseInt(document.getElementById('editClientId').value);
+    const id = document.getElementById('editClientId').value;
     const name = document.getElementById('editClientName').value.trim();
     const phone = document.getElementById('editClientPhone').value.trim();
     const email = document.getElementById('editClientEmail').value.trim();
 
     if (!name || !phone) {
-        alert('الرجاء ملء جميع الحقول المطلوبة');
+        showAlert('الرجاء ملء جميع الحقول المطلوبة', 'warning');
         return false;
     }
 
-    let clients = getClients();
-    const index = clients.findIndex(c => c.id === id);
-    if (index === -1) return false;
-
-    clients[index] = { id, name, phone, email: email || '' };
-    saveClients(clients);
+    await db.collection('clients').doc(id).update({ name, phone, email: email || '' });
 
     closeEditModal();
     navigateTo('clients');
@@ -703,7 +674,7 @@ function saveRepairs(repairs) {
 function addRepair(event) {
     event.preventDefault();
 
-    const clientId = parseInt(document.getElementById('repairClient').value);
+    const clientId = document.getElementById('repairClient').value;
     const deviceType = document.getElementById('repairDeviceType').value;
     const deviceModel = document.getElementById('repairDeviceModel').value.trim();
     const cost = document.getElementById('repairCost').value;
