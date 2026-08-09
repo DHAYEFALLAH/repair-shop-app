@@ -172,7 +172,7 @@ async function navigateTo(page) {
             case 'repairs': {
             // ===== صفحة الطلبات/التذاكر =====
             const clientsList = await getClients();
-            const repairs = getRepairs();
+            const repairs = await getRepairs();
 
             // إذا ما كايناش عملاء، ما نقدروش نضيفو طلب
             if (clientsList.length === 0) {
@@ -268,12 +268,12 @@ async function navigateTo(page) {
                                             <td>${deviceLabel} — ${r.deviceModel || ''}</td>
                                             <td>${r.issue}</td>
                                             <td>
-                                                <select class="status-select status-${r.status}" onchange="updateRepairStatus(${r.id}, this.value)">
+                                                <select class="status-select status-${r.status}" onchange="updateRepairStatus('${r.id}', this.value)">
                                                     ${statusList.map(s => `<option value="${s}" ${r.status === s ? 'selected' : ''}>${dict[statusKeyMap[s]]}</option>`).join('')}
                                                 </select>
                                             </td>
                                             <td>
-                                                <button class="btn-danger" onclick="deleteRepair(${r.id})">
+                                                <button class="btn-danger" onclick="deleteRepair('${r.id}')">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -377,7 +377,7 @@ async function navigateTo(page) {
 
         case 'dashboard': {
             const clientsList = await getClients();
-            const repairs = getRepairs();
+            const repairs = await getRepairs();
             const parts = getParts();
 
             const activeRepairs = repairs.filter(r => r.status !== 'delivered').length;
@@ -656,22 +656,17 @@ async function updateClient(event) {
 // ==========================================
 
 
+
 // ==========================================
-// دوال إدارة طلبات الإصلاح (Repairs CRUD)
+// دوال إدارة طلبات الإصلاح (Repairs CRUD) — عبر Firestore
 // ==========================================
 
-const REPAIRS_STORAGE_KEY = 'repairs';
-
-function getRepairs() {
-    const data = localStorage.getItem(REPAIRS_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+async function getRepairs() {
+    const snapshot = await db.collection('repairs').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
-function saveRepairs(repairs) {
-    localStorage.setItem(REPAIRS_STORAGE_KEY, JSON.stringify(repairs));
-}
-
-function addRepair(event) {
+async function addRepair(event) {
     event.preventDefault();
 
     const clientId = document.getElementById('repairClient').value;
@@ -681,13 +676,11 @@ function addRepair(event) {
     const issue = document.getElementById('repairIssue').value.trim();
 
     if (!issue) {
-        alert('الرجاء وصف العطل');
+        showAlert('الرجاء وصف العطل', 'warning');
         return false;
     }
 
-    const repairs = getRepairs();
-    repairs.push({
-        id: Date.now(),
+    await db.collection('repairs').add({
         clientId: clientId,
         deviceType: deviceType,
         deviceModel: deviceModel,
@@ -696,7 +689,6 @@ function addRepair(event) {
         status: 'received',
         createdAt: Date.now()
     });
-    saveRepairs(repairs);
 
     navigateTo('repairs');
     return false;
@@ -706,22 +698,15 @@ function deleteRepair(id) {
     const lang = document.documentElement.lang || 'ar';
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
 
-    showConfirmDialog(dict.confirmDeleteRepair,function() {
-        let repairs = getRepairs();
-        repairs = repairs.filter(r => r.id !== id);
-        saveRepairs(repairs);
+    showConfirmDialog(dict.confirmDeleteRepair, async function () {
+        await db.collection('repairs').doc(id).delete();
         navigateTo('repairs');
         showSuccess(dict.repairDeleted || 'تم حذف الطلب بنجاح');
-    })
-    
+    });
 }
 
-function updateRepairStatus(id, newStatus) {
-    const repairs = getRepairs();
-    const repair = repairs.find(r => r.id === id);
-    if (!repair) return;
-    repair.status = newStatus;
-    saveRepairs(repairs);
+async function updateRepairStatus(id, newStatus) {
+    await db.collection('repairs').doc(id).update({ status: newStatus });
     navigateTo('repairs');
 }
 // ==========================================
