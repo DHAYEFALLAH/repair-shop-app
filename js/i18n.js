@@ -15,7 +15,7 @@ const translations = {
     username: "اسم المستخدم",
     password: "كلمة المرور",
     loginButton: "دخول",
-    loginHint: "استخدم admin / admin",
+    
     loginError: "اسم المستخدم أو كلمة المرور غير صحيحة",
     clientsTitle: "العملاء",
     clientsSubtitle: "إدارة بيانات العملاء",
@@ -107,7 +107,7 @@ const translations = {
     username: "Nom d'utilisateur",
     password: "Mot de passe",
     loginButton: "Se connecter",
-    loginHint: "Utilisez admin / admin",
+    
     loginError: "Nom d'utilisateur ou mot de passe incorrect",
     clientsTitle: "Clients",
     clientsSubtitle: "Gestion des clients",

@@ -1,10 +1,6 @@
 // ==========================================
-// إدارة المصادقة (Authentication)
+// إدارة المصادقة عبر Firebase Authentication
 // ==========================================
-
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'admin';
-const AUTH_STORAGE_KEY = 'isLoggedIn';
 
 /**
  * التحقق من بيانات الدخول (يُستخدم في login.html)
@@ -12,22 +8,27 @@ const AUTH_STORAGE_KEY = 'isLoggedIn';
 function handleLogin(event) {
     event.preventDefault();
 
-    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
     const errorEl = document.getElementById('loginError');
+    const submitBtn = event.target.querySelector('button[type="submit"]');
 
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        localStorage.setItem(AUTH_STORAGE_KEY, 'true');
-        // إعادة التوجيه إلى الصفحة الرئيسية
-        window.location.href = 'index.html';
-        return false;
-    } else {
-        const lang = document.documentElement.lang || 'ar';
-        const dict = (lang === 'ar') ? translations.ar : translations.fr;
-        errorEl.textContent = dict.loginError || 'اسم المستخدم أو كلمة المرور غير صحيحة';
-        errorEl.style.display = 'block';
-        return false;
-    }
+    errorEl.style.display = 'none';
+    if (submitBtn) submitBtn.disabled = true;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            window.location.href = 'index.html';
+        })
+        .catch((error) => {
+            const lang = document.documentElement.lang || 'ar';
+            const dict = (lang === 'ar') ? translations.ar : translations.fr;
+            errorEl.textContent = dict.loginError || 'اسم المستخدم أو كلمة المرور غير صحيحة';
+            errorEl.style.display = 'block';
+            if (submitBtn) submitBtn.disabled = false;
+        });
+
+    return false;
 }
 
 /**
@@ -35,30 +36,32 @@ function handleLogin(event) {
  * إذا لم يكن مسجلاً، يتم إعادة التوجيه إلى login.html
  */
 function checkAuth() {
-    const isLoggedIn = localStorage.getItem(AUTH_STORAGE_KEY) === 'true';
-    if (!isLoggedIn) {
-        window.location.href = 'login.html';
-    }
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+    });
 }
 
 /**
  * تسجيل الخروج (في index.html)
  */
 function logout() {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-    window.location.href = 'login.html';
+    auth.signOut().then(() => {
+        window.location.href = 'login.html';
+    });
 }
 
 // تنفيذ التحقق تلقائياً إذا كنا في الصفحة الرئيسية
-// نتحقق من وجود عناصر الصفحة الرئيسية (مثل sideMenu) لتحديد السياق
 if (document.getElementById('sideMenu')) {
-    // نحن في index.html
     checkAuth();
 }
 
 // إذا كنا في صفحة الدخول وهو مسجل دخول أصلاً، نوجهه للرئيسية مباشرة
 if (document.getElementById('loginForm')) {
-    if (localStorage.getItem(AUTH_STORAGE_KEY) === 'true') {
-        window.location.href = 'index.html';
-    }
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            window.location.href = 'index.html';
+        }
+    });
 }

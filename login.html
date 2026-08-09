@@ -26,7 +26,7 @@
             <form id="loginForm" onsubmit="return handleLogin(event)">
                 <div class="form-group">
                     <label for="username" data-i18n="username">اسم المستخدم</label>
-                    <input type="text" id="username" placeholder="admin" required />
+                    <input type="email" id="username" placeholder="you@example.com" required />
                 </div>
                 <div class="form-group">
                     <label for="password" data-i18n="password">كلمة المرور</label>
@@ -35,9 +35,7 @@
                 <div id="loginError" class="login-error" style="display: none;"></div>
                 <button type="submit" class="login-btn" data-i18n="loginButton">دخول</button>
             </form>
-            <div class="login-footer">
-                <span data-i18n="loginHint">استخدم admin / admin</span>
-            </div>
+            
         </div>
     </div>
 
