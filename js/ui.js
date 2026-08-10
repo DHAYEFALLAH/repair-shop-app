@@ -213,7 +213,7 @@ async function navigateTo(page) {
                             <div class="form-group">
                                 <label for="repairClient" data-i18n="selectClient">${dict.selectClient}</label>
                                 <select id="repairClient" required>
-                                    ${clientsList.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                                    ${clientsList.map(c => `<option value="${c.id}" data-phone="${c.phone}">${c.name}</option>`).join('')}
                                 </select>
                             </div>
                             <div class="form-group">
@@ -258,14 +258,13 @@ async function navigateTo(page) {
                             </thead>
                             <tbody>
                                 ${repairs.map((r, index) => {
-                                    const clientObj = clientsList.find(c => c.id === r.clientId);
-                                    const clientName = clientObj ? clientObj.name : '-';
-                                    const deviceLabel = dict[deviceTypes.find(d => d.value === r.deviceType)?.key] || r.deviceType;
+                                    const clientName = r.client_name || '-';
+                                    const deviceLabel = dict[deviceTypes.find(d => d.value === r.device_type)?.key] || r.device_type;
                                     return `
                                         <tr>
                                             <td>${index + 1}</td>
                                             <td>${clientName}</td>
-                                            <td>${deviceLabel} — ${r.deviceModel || ''}</td>
+                                            <td>${deviceLabel} — ${r.device_model || ''}</td>
                                             <td>${r.issue}</td>
                                             <td>
                                                 <select class="status-select status-${r.status}" onchange="updateRepairStatus('${r.id}', this.value)">
@@ -396,7 +395,7 @@ async function navigateTo(page) {
                 delivered: 'statusDelivered'
             };
 
-            const recent = [...repairs].sort((a, b) => b.createdAt - a.createdAt).slice(0, 5);
+            const recent = [...repairs].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
 
             innerHTML = `
                 <h1 data-i18n="title">${dict.title}</h1>
@@ -424,13 +423,12 @@ async function navigateTo(page) {
                 <div class="recent-section">
                     <h3 data-i18n="recentRepairs">${dict.recentRepairs}</h3>
                     ${recent.length === 0 ? `<p class="no-clients" data-i18n="noRecentRepairs">${dict.noRecentRepairs}</p>` : recent.map(r => {
-                        const clientObj = clientsList.find(c => c.id === r.clientId);
-                        const clientName = clientObj ? clientObj.name : '-';
+                        const clientName = r.client_name || '-';
                         return `
                             <div class="recent-item">
                                 <div class="recent-main">
                                     <span class="recent-client">${clientName}</span>
-                                    <span class="recent-device">${r.deviceModel || ''} — ${r.issue}</span>
+                                    <span class="recent-device">${r.device_model || ''} — ${r.issue}</span>
                                 </div>
                                 <span class="status-badge status-${r.status}">${dict[statusKeyMap[r.status]]}</span>
                             </div>
@@ -553,12 +551,20 @@ function showSuccess(message) {
 
 
 // ==========================================
-// دوال إدارة العملاء (Clients CRUD) — عبر Firestore
+// دوال إدارة العملاء (Clients CRUD) — عبر Supabase
 // ==========================================
 
 async function getClients() {
-    const snapshot = await db.collection('clients').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const { data, error } = await supabaseClient
+        .from('clients')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+    return data;
 }
 
 /**
@@ -576,32 +582,49 @@ async function addClient(event) {
         return false;
     }
 
-    await db.collection('clients').add({ name, phone, email: email || '' });
+    const { error } = await supabaseClient
+        .from('clients')
+        .insert({ name, phone, email: email || null });
+
+    if (error) {
+        showAlert('حدث خطأ أثناء الإضافة', 'error');
+        return false;
+    }
 
     navigateTo('clients');
     return false;
 }
 
 /**
- * حذف عميل بواسطة المعرف مع التحقق من الطلبات المرتبطة
+ * حذف عميل مع التحقق من الطلبات المرتبطة
+ * (نتحقق مباشرة من جدول repairs، بلا حاجة لدالة getRepairs التي لم تُنقل بعد)
  */
 async function deleteClient(id) {
-    const repairs = getRepairs(); // مازالت فـ localStorage دابا، رح نبدلوها فـ الخطوة الجاية
-    const clientRepairs = repairs.filter(r => r.clientId === id);
-
     const lang = document.documentElement.lang || 'ar';
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
 
-    // حالة 1: عندو طلبات مرتبطة
-    if (clientRepairs.length > 0) {
-        const msg = dict.deleteClientHasRepairs.replace('{count}', clientRepairs.length);
+    const { data: linkedRepairs, error: checkError } = await supabaseClient
+        .from('repairs')
+        .select('id')
+        .eq('client_id', id);
+
+    if (checkError) {
+        showAlert('حدث خطأ أثناء التحقق من البيانات', 'error');
+        return;
+    }
+
+    if (linkedRepairs.length > 0) {
+        const msg = dict.deleteClientHasRepairs.replace('{count}', linkedRepairs.length);
         showAlert(msg, 'error');
         return;
     }
 
-    // حالة 2: بلا طلبات => نأكدو الحذف، وكي يجاوب المستخدم بـ "نعم"، نحذفو من Firestore
     showConfirmDialog(dict.confirmDeleteClients, async function () {
-        await db.collection('clients').doc(id).delete();
+        const { error } = await supabaseClient.from('clients').delete().eq('id', id);
+        if (error) {
+            showAlert('حدث خطأ أثناء الحذف', 'error');
+            return;
+        }
         navigateTo('clients');
         showSuccess(dict.clientDeleted || 'تم حذف العميل بنجاح.');
     });
@@ -611,14 +634,18 @@ async function deleteClient(id) {
  * فتح نموذج تعديل العميل
  */
 async function editClient(id) {
-    const doc = await db.collection('clients').doc(id).get();
-    if (!doc.exists) return;
-    const client = { id: doc.id, ...doc.data() };
+    const { data, error } = await supabaseClient
+        .from('clients')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-    document.getElementById('editClientId').value = client.id;
-    document.getElementById('editClientName').value = client.name;
-    document.getElementById('editClientPhone').value = client.phone;
-    document.getElementById('editClientEmail').value = client.email || '';
+    if (error || !data) return;
+
+    document.getElementById('editClientId').value = data.id;
+    document.getElementById('editClientName').value = data.name;
+    document.getElementById('editClientPhone').value = data.phone;
+    document.getElementById('editClientEmail').value = data.email || '';
 
     document.getElementById('editClientModal').style.display = 'flex';
 }
@@ -646,30 +673,49 @@ async function updateClient(event) {
         return false;
     }
 
-    await db.collection('clients').doc(id).update({ name, phone, email: email || '' });
+    const { error } = await supabaseClient
+        .from('clients')
+        .update({ name, phone, email: email || null })
+        .eq('id', id);
+
+    if (error) {
+        showAlert('حدث خطأ أثناء التحديث', 'error');
+        return false;
+    }
 
     closeEditModal();
     navigateTo('clients');
     return false;
 }
-
 // ==========================================
 
 
-
 // ==========================================
-// دوال إدارة طلبات الإصلاح (Repairs CRUD) — عبر Firestore
+// دوال إدارة طلبات الإصلاح (Repairs CRUD) — عبر Supabase
 // ==========================================
 
 async function getRepairs() {
-    const snapshot = await db.collection('repairs').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const { data, error } = await supabaseClient
+        .from('repairs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+    return data;
 }
 
 async function addRepair(event) {
     event.preventDefault();
 
-    const clientId = document.getElementById('repairClient').value;
+    const clientSelect = document.getElementById('repairClient');
+    const clientId = clientSelect.value;
+    const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+    const clientName = selectedOption.textContent;
+    const clientPhone = selectedOption.dataset.phone;
+
     const deviceType = document.getElementById('repairDeviceType').value;
     const deviceModel = document.getElementById('repairDeviceModel').value.trim();
     const cost = document.getElementById('repairCost').value;
@@ -680,15 +726,22 @@ async function addRepair(event) {
         return false;
     }
 
-    await db.collection('repairs').add({
-        clientId: clientId,
-        deviceType: deviceType,
-        deviceModel: deviceModel,
+    const { error } = await supabaseClient.from('repairs').insert({
+        client_id: clientId,
+        client_name: clientName,
+        client_phone: clientPhone,
+        device_type: deviceType,
+        device_model: deviceModel,
         cost: cost || 0,
         issue: issue,
-        status: 'received',
-        createdAt: Date.now()
+        status: 'received'
     });
+
+    if (error) {
+        console.error(error);
+        showAlert('حدث خطأ أثناء إضافة الطلب', 'error');
+        return false;
+    }
 
     navigateTo('repairs');
     return false;
@@ -699,14 +752,26 @@ function deleteRepair(id) {
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
 
     showConfirmDialog(dict.confirmDeleteRepair, async function () {
-        await db.collection('repairs').doc(id).delete();
+        const { error } = await supabaseClient.from('repairs').delete().eq('id', id);
+        if (error) {
+            showAlert('حدث خطأ أثناء الحذف', 'error');
+            return;
+        }
         navigateTo('repairs');
         showSuccess(dict.repairDeleted || 'تم حذف الطلب بنجاح');
     });
 }
 
 async function updateRepairStatus(id, newStatus) {
-    await db.collection('repairs').doc(id).update({ status: newStatus });
+    const { error } = await supabaseClient
+        .from('repairs')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+    if (error) {
+        showAlert('حدث خطأ أثناء تحديث الحالة', 'error');
+        return;
+    }
     navigateTo('repairs');
 }
 // ==========================================
