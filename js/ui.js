@@ -779,12 +779,20 @@ async function updateRepairStatus(id, newStatus) {
 
 
 // ==========================================
-// دوال إدارة المخزون (Inventory CRUD) — عبر Firestore
+// دوال إدارة المخزون (Inventory CRUD) — عبر Supabase
 // ==========================================
 
 async function getParts() {
-    const snapshot = await db.collection('parts').get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const { data, error } = await supabaseClient
+        .from('parts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return [];
+    }
+    return data;
 }
 
 async function addPart(event) {
@@ -799,11 +807,16 @@ async function addPart(event) {
         return false;
     }
 
-    await db.collection('parts').add({
+    const { error } = await supabaseClient.from('parts').insert({
         name: name,
         quantity: quantity || 0,
         price: price || 0
     });
+
+    if (error) {
+        showAlert('حدث خطأ أثناء الإضافة', 'error');
+        return false;
+    }
 
     navigateTo('inventory');
     return false;
@@ -814,19 +827,36 @@ function deletePart(id) {
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
 
     showConfirmDialog(dict.confirmDeletePart, async function () {
-        await db.collection('parts').doc(id).delete();
+        const { error } = await supabaseClient.from('parts').delete().eq('id', id);
+        if (error) {
+            showAlert('حدث خطأ أثناء الحذف', 'error');
+            return;
+        }
         navigateTo('inventory');
         showSuccess(dict.partDeleted || 'تم حذف القطعة بنجاح');
     });
 }
 
 async function adjustPartQuantity(id, delta) {
-    const doc = await db.collection('parts').doc(id).get();
-    if (!doc.exists) return;
-    const currentQuantity = doc.data().quantity || 0;
-    const newQuantity = Math.max(0, currentQuantity + delta);
+    const { data, error: fetchError } = await supabaseClient
+        .from('parts')
+        .select('quantity')
+        .eq('id', id)
+        .single();
 
-    await db.collection('parts').doc(id).update({ quantity: newQuantity });
+    if (fetchError || !data) return;
+
+    const newQuantity = Math.max(0, data.quantity + delta);
+
+    const { error } = await supabaseClient
+        .from('parts')
+        .update({ quantity: newQuantity })
+        .eq('id', id);
+
+    if (error) {
+        showAlert('حدث خطأ أثناء تحديث الكمية', 'error');
+        return;
+    }
     navigateTo('inventory');
 }
 // ==========================================
