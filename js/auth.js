@@ -1,11 +1,11 @@
 // ==========================================
-// إدارة المصادقة عبر Firebase Authentication
+// إدارة المصادقة عبر Supabase Authentication
 // ==========================================
 
 /**
  * التحقق من بيانات الدخول (يُستخدم في login.html)
  */
-function handleLogin(event) {
+async function handleLogin(event) {
     event.preventDefault();
 
     const email = document.getElementById('username').value.trim();
@@ -16,18 +16,18 @@ function handleLogin(event) {
     errorEl.style.display = 'none';
     if (submitBtn) submitBtn.disabled = true;
 
-    auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-            window.location.href = 'index.html';
-        })
-        .catch((error) => {
-            const lang = document.documentElement.lang || 'ar';
-            const dict = (lang === 'ar') ? translations.ar : translations.fr;
-            errorEl.textContent = dict.loginError || 'اسم المستخدم أو كلمة المرور غير صحيحة';
-            errorEl.style.display = 'block';
-            if (submitBtn) submitBtn.disabled = false;
-        });
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
+    if (error) {
+        const lang = document.documentElement.lang || 'ar';
+        const dict = (lang === 'ar') ? translations.ar : translations.fr;
+        errorEl.textContent = dict.loginError || 'اسم المستخدم أو كلمة المرور غير صحيحة';
+        errorEl.style.display = 'block';
+        if (submitBtn) submitBtn.disabled = false;
+        return false;
+    }
+
+    window.location.href = 'index.html';
     return false;
 }
 
@@ -35,21 +35,19 @@ function handleLogin(event) {
  * التحقق من حالة تسجيل الدخول (في index.html)
  * إذا لم يكن مسجلاً، يتم إعادة التوجيه إلى login.html
  */
-function checkAuth() {
-    auth.onAuthStateChanged((user) => {
-        if (!user) {
-            window.location.href = 'login.html';
-        }
-    });
+async function checkAuth() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+        window.location.href = 'login.html';
+    }
 }
 
 /**
  * تسجيل الخروج (في index.html)
  */
-function logout() {
-    auth.signOut().then(() => {
-        window.location.href = 'login.html';
-    });
+async function logout() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
 }
 
 // تنفيذ التحقق تلقائياً إذا كنا في الصفحة الرئيسية
@@ -59,8 +57,8 @@ if (document.getElementById('sideMenu')) {
 
 // إذا كنا في صفحة الدخول وهو مسجل دخول أصلاً، نوجهه للرئيسية مباشرة
 if (document.getElementById('loginForm')) {
-    auth.onAuthStateChanged((user) => {
-        if (user) {
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
             window.location.href = 'index.html';
         }
     });
