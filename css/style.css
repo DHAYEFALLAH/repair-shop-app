@@ -898,3 +898,63 @@ body {
     font-size: 0.85rem;
     color: #6b7280;
 }
+
+/* ===== صفحة تتبّع الزبون ===== */
+.track-results {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.repair-card {
+    background: #f8faff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.repair-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-weight: 600;
+    color: #1e2a4a;
+    margin-bottom: 8px;
+}
+
+.repair-card-issue {
+    color: #4b5b7a;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.repair-card-cost {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.track-lang-switch {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.track-lang-switch button {
+    background: #e5e7eb;
+    color: #1e2a4a;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.track-lang-switch button.active-lang {
+    background: #1e2a4a;
+    color: #fff;
+}

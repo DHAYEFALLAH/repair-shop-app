@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="trackTitle">تتبّع حالة الإصلاح</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- مكتبة Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-magnifying-glass login-icon"></i>
+                <h2 data-i18n="trackTitle">تتبّع حالة الإصلاح</h2>
+            </div>
+            <p style="text-align:center;color:#6b7280;margin-bottom:20px;" data-i18n="trackSubtitle">
+                أدخل رقم هاتفك لمعرفة حالة جهازك
+            </p>
+
+            <form id="trackForm" onsubmit="return searchRepairs(event)">
+                <div class="form-group">
+                    <label for="trackPhone" data-i18n="password">رقم الهاتف</label>
+                    <input type="tel" id="trackPhone" placeholder="0555xxxxxx" required />
+                </div>
+                <button type="submit" class="login-btn" data-i18n="searchBtn">بحث</button>
+            </form>
+
+            <div id="trackResults" class="track-results"></div>
+
+            <div class="track-lang-switch">
+                <button type="button" onclick="setLanguage('ar')" data-lang-btn="ar">العربية</button>
+                <button type="button" onclick="setLanguage('fr')" data-lang-btn="fr">Français</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/track.js"></script>
+</body>
+</html>

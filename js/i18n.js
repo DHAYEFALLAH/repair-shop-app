@@ -89,7 +89,15 @@ const translations = {
     statClients: "إجمالي العملاء",
     statLowStock: "قطع بمخزون منخفض",
     recentRepairs: "آخر الطلبات",
-    noRecentRepairs: "لا توجد طلبات بعد"
+    noRecentRepairs: "لا توجد طلبات بعد",
+
+     // ===== صفحة تتبّع الزبون =====
+    trackTitle: "تتبّع حالة الإصلاح",
+    trackSubtitle: "أدخل رقم هاتفك لمعرفة حالة جهازك",
+    searchBtn: "بحث",
+    searching: "جاري البحث...",
+    noResults: "لم يتم العثور على أي طلب بهذا الرقم",
+    trackError: "حدث خطأ، حاول مجدداً"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -181,7 +189,15 @@ const translations = {
     statClients: "Total clients",
     statLowStock: "Pièces en stock faible",
     recentRepairs: "Dernières demandes",
-    noRecentRepairs: "Aucune demande pour le moment"
+    noRecentRepairs: "Aucune demande pour le moment",
+
+    // ===== Suivi client =====
+    trackTitle: "Suivi de réparation",
+    trackSubtitle: "Entrez votre numéro pour connaître l'état de votre appareil",
+    searchBtn: "Rechercher",
+    searching: "Recherche en cours...",
+    noResults: "Aucune demande trouvée pour ce numéro",
+    trackError: "Une erreur est survenue, réessayez"
   }
 };
 
@@ -194,6 +210,11 @@ function setLanguage(lang) {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (dict[key]) el.textContent = dict[key];
+  });
+
+    // تحديث أزرار اللغة في صفحة التتبّع (إن وجدت)
+  document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+    btn.classList.toggle('active-lang', btn.dataset.langBtn === lang);
   });
 
   // تحديث القائمة المنسدلة في الإعدادات (إن وجدت)
