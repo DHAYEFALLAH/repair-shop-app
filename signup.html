@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="loginTitle">تسجيل الدخول</title>
+    <title data-i18n="signupTitle">إنشاء حساب محل جديد</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -11,38 +11,39 @@
     <!-- مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body class="login-page">
 
-    <!-- ===== صفحة تسجيل الدخول ===== -->
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <i class="fas fa-tools login-icon"></i>
-                <h2 data-i18n="loginTitle">تسجيل الدخول</h2>
+                <i class="fas fa-store login-icon"></i>
+                <h2 data-i18n="signupTitle">إنشاء حساب محل جديد</h2>
             </div>
-            <form id="loginForm" onsubmit="return handleLogin(event)">
+            <form id="signupForm" onsubmit="return handleSignup(event)">
                 <div class="form-group">
-                    <label for="username" data-i18n="username">اسم المستخدم</label>
+                    <label for="shopName" data-i18n="signupShopName">اسم المحل</label>
+                    <input type="text" id="shopName" required />
+                </div>
+                <div class="form-group">
+                    <label for="username" data-i18n="username">الإيميل</label>
                     <input type="email" id="username" placeholder="you@example.com" required />
                 </div>
                 <div class="form-group">
                     <label for="password" data-i18n="password">كلمة المرور</label>
-                    <input type="password" id="password" placeholder="••••••••" required />
+                    <input type="password" id="password" placeholder="••••••••" required minlength="6" />
                 </div>
                 <div id="loginError" class="login-error" style="display: none;"></div>
-                <button type="submit" class="login-btn" data-i18n="loginButton">دخول</button>
+                <button type="submit" class="login-btn" data-i18n="signupButton">إنشاء الحساب</button>
             </form>
             <div class="login-footer">
-                <span data-i18n="noAccount">ليس لديك حساب؟</span>
-                <a href="signup.html" data-i18n="signupLink" style="color:#f0b34b;font-weight:600;text-decoration:none;">أنشئ محلك الآن</a>
+                <span data-i18n="haveAccount">لديك حساب بالفعل؟</span>
+                <a href="login.html" data-i18n="loginLink" style="color:#f0b34b;font-weight:600;text-decoration:none;">سجّل الدخول</a>
             </div>
-            
         </div>
     </div>
 
     <script src="js/supabase-config.js"></script>
     <script src="js/i18n.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/signup.js"></script>
 </body>
 </html>

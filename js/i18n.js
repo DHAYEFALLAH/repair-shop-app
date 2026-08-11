@@ -121,7 +121,17 @@ const translations = {
     reportAvgCost: "متوسط تكلفة الطلب",
     reportByStatus: "توزيع الطلبات حسب الحالة",
     reportByDevice: "توزيع الطلبات حسب نوع الجهاز",
-    reportInventoryValue: "القيمة الإجمالية للمخزون الحالي"
+    reportInventoryValue: "القيمة الإجمالية للمخزون الحالي",
+
+    // ===== تسجيل محل جديد =====
+    signupTitle: "إنشاء حساب محل جديد",
+    signupShopName: "اسم المحل",
+    signupButton: "إنشاء الحساب",
+    signupError: "حدث خطأ أثناء إنشاء الحساب، حاول مجدداً",
+    noAccount: "ليس لديك حساب؟",
+    signupLink: "أنشئ محلك الآن",
+    haveAccount: "لديك حساب بالفعل؟",
+    loginLink: "سجّل الدخول"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -245,7 +255,17 @@ const translations = {
     reportAvgCost: "Coût moyen par demande",
     reportByStatus: "Répartition par statut",
     reportByDevice: "Répartition par type d'appareil",
-    reportInventoryValue: "Valeur totale du stock actuel"
+    reportInventoryValue: "Valeur totale du stock actuel",
+
+    // ===== Inscription d'un nouvel atelier =====
+    signupTitle: "Créer un compte atelier",
+    signupShopName: "Nom de l'atelier",
+    signupButton: "Créer le compte",
+    signupError: "Une erreur est survenue, réessayez",
+    noAccount: "Vous n'avez pas de compte ?",
+    signupLink: "Créez votre atelier",
+    haveAccount: "Vous avez déjà un compte ?",
+    loginLink: "Se connecter"
   }
 };
 
