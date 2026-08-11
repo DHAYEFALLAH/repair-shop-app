@@ -272,6 +272,9 @@ async function navigateTo(page) {
                                                 </select>
                                             </td>
                                             <td>
+                                                <button class="btn-print" onclick='printReceipt(${JSON.stringify(r)})' title="${dict.printBtn}">
+                                                    <i class="fas fa-print"></i>
+                                                </button>
                                                 <button class="btn-danger" onclick="deleteRepair('${r.id}')">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -774,6 +777,50 @@ async function updateRepairStatus(id, newStatus) {
     }
     navigateTo('repairs');
 }
+
+/**
+ * بناء وطباعة إيصال استلام الجهاز
+ */
+function printReceipt(repair) {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    const deviceTypeKeys = {
+        phone: 'deviceTypePhone', laptop: 'deviceTypeLaptop',
+        desktop: 'deviceTypeDesktop', tablet: 'deviceTypeTablet', other: 'deviceTypeOther'
+    };
+    const deviceLabel = dict[deviceTypeKeys[repair.device_type]] || repair.device_type;
+    const dateStr = new Date(repair.created_at).toLocaleDateString(lang === 'ar' ? 'ar-DZ' : 'fr-FR');
+    const shortId = repair.id.slice(0, 8).toUpperCase();
+
+    let printArea = document.getElementById('print-area');
+    if (!printArea) {
+        printArea = document.createElement('div');
+        printArea.id = 'print-area';
+        document.body.appendChild(printArea);
+    }
+
+    printArea.innerHTML = `
+        <div class="receipt-box" lang="${lang}">
+            <h2>${dict.menuTitle}</h2>
+            <p class="receipt-subtitle">${dict.receiptTitle}</p>
+            <hr />
+            <p><b>${dict.receiptTicketNo}:</b> #${shortId}</p>
+            <p><b>${dict.receiptDate}:</b> ${dateStr}</p>
+            <p><b>${dict.receiptClient}:</b> ${repair.client_name || ''}</p>
+            <p><b>${dict.receiptPhone}:</b> ${repair.client_phone || ''}</p>
+            <hr />
+            <p><b>${dict.receiptDevice}:</b> ${deviceLabel} — ${repair.device_model || ''}</p>
+            <p><b>${dict.receiptIssue}:</b> ${repair.issue}</p>
+            <hr />
+            <p><b>${dict.receiptCost}:</b> ${repair.cost || 0} DZD</p>
+            <p class="receipt-footer">${dict.receiptFooter}</p>
+        </div>
+    `;
+
+    setTimeout(() => window.print(), 50);
+}
+
 // ==========================================
 
 

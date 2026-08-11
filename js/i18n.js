@@ -97,7 +97,19 @@ const translations = {
     searchBtn: "بحث",
     searching: "جاري البحث...",
     noResults: "لم يتم العثور على أي طلب بهذا الرقم",
-    trackError: "حدث خطأ، حاول مجدداً"
+    trackError: "حدث خطأ، حاول مجدداً",
+
+    // ===== إيصال الطباعة =====
+    printBtn: "طباعة",
+    receiptTitle: "إيصال استلام جهاز للإصلاح",
+    receiptTicketNo: "رقم الطلب",
+    receiptDate: "التاريخ",
+    receiptClient: "الزبون",
+    receiptPhone: "الهاتف",
+    receiptDevice: "الجهاز",
+    receiptIssue: "العطل",
+    receiptCost: "التكلفة التقديرية",
+    receiptFooter: "يرجى الاحتفاظ بهذا الإيصال لاستلام الجهاز عند الانتهاء من الإصلاح."
   },
   fr: {
     title: "Atelier de Réparation",
@@ -197,7 +209,19 @@ const translations = {
     searchBtn: "Rechercher",
     searching: "Recherche en cours...",
     noResults: "Aucune demande trouvée pour ce numéro",
-    trackError: "Une erreur est survenue, réessayez"
+    trackError: "Une erreur est survenue, réessayez",
+
+    // ===== Reçu imprimable =====
+    printBtn: "Imprimer",
+    receiptTitle: "Reçu de dépôt d'appareil",
+    receiptTicketNo: "N° de commande",
+    receiptDate: "Date",
+    receiptClient: "Client",
+    receiptPhone: "Téléphone",
+    receiptDevice: "Appareil",
+    receiptIssue: "Panne",
+    receiptCost: "Coût estimé",
+    receiptFooter: "Veuillez conserver ce reçu pour récupérer votre appareil une fois la réparation terminée."
   }
 };
 

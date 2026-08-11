@@ -958,3 +958,83 @@ body {
     background: #1e2a4a;
     color: #fff;
 }
+
+/* ===== إيصال قابل للطباعة ===== */
+#print-area {
+    display: none;
+}
+
+.receipt-box {
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+    padding: 24px;
+    color: #000;
+    background: #fff;
+    width: 320px;
+    margin: 0 auto;
+}
+
+[lang="fr"] .receipt-box {
+    direction: ltr;
+}
+
+.receipt-box h2 {
+    text-align: center;
+    margin: 0 0 2px;
+    font-size: 1.1rem;
+}
+
+.receipt-box .receipt-subtitle {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #444;
+    margin: 0 0 14px;
+}
+
+.receipt-box hr {
+    border: none;
+    border-top: 1px dashed #999;
+    margin: 10px 0;
+}
+
+.receipt-box p {
+    font-size: 0.85rem;
+    margin: 4px 0;
+}
+
+.receipt-box .receipt-footer {
+    font-size: 0.7rem;
+    color: #666;
+    margin-top: 16px;
+}
+
+/* زر الطباعة في الجدول */
+.btn-print {
+    background: #0891b2;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: 5px;
+}
+
+[dir="rtl"] .btn-print {
+    margin-left: 0;
+    margin-right: 5px;
+}
+
+.btn-print:hover {
+    background: #0e7490;
+}
+
+/* عند الطباعة: نخفي كل شيء إلا منطقة الإيصال */
+@media print {
+    body > *:not(#print-area) {
+        display: none !important;
+    }
+    #print-area {
+        display: block !important;
+    }
+}
