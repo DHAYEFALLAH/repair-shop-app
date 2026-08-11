@@ -822,7 +822,8 @@ async function addRepair(event) {
         device_model: deviceModel,
         cost: cost || 0,
         issue: issue,
-        status: 'received'
+        status: 'received',
+        shop_id: currentShopId
     });
 
     if (error) {
