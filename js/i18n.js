@@ -109,7 +109,19 @@ const translations = {
     receiptDevice: "الجهاز",
     receiptIssue: "العطل",
     receiptCost: "التكلفة التقديرية",
-    receiptFooter: "يرجى الاحتفاظ بهذا الإيصال لاستلام الجهاز عند الانتهاء من الإصلاح."
+    receiptFooter: "يرجى الاحتفاظ بهذا الإيصال لاستلام الجهاز عند الانتهاء من الإصلاح.",
+
+    // ===== التقارير =====
+    menuReports: "التقارير",
+    reportsTitle: "التقارير والإحصائيات",
+    reportsSubtitle: "نظرة شاملة على أداء المحل",
+    reportTotalRepairs: "إجمالي الطلبات",
+    reportDeliveredRepairs: "طلبات مسلَّمة",
+    reportTotalRevenue: "إجمالي الإيرادات",
+    reportAvgCost: "متوسط تكلفة الطلب",
+    reportByStatus: "توزيع الطلبات حسب الحالة",
+    reportByDevice: "توزيع الطلبات حسب نوع الجهاز",
+    reportInventoryValue: "القيمة الإجمالية للمخزون الحالي"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -221,7 +233,19 @@ const translations = {
     receiptDevice: "Appareil",
     receiptIssue: "Panne",
     receiptCost: "Coût estimé",
-    receiptFooter: "Veuillez conserver ce reçu pour récupérer votre appareil une fois la réparation terminée."
+    receiptFooter: "Veuillez conserver ce reçu pour récupérer votre appareil une fois la réparation terminée.",
+
+    // ===== Rapports =====
+    menuReports: "Rapports",
+    reportsTitle: "Rapports et statistiques",
+    reportsSubtitle: "Vue d'ensemble des performances de l'atelier",
+    reportTotalRepairs: "Total des demandes",
+    reportDeliveredRepairs: "Demandes livrées",
+    reportTotalRevenue: "Revenu total",
+    reportAvgCost: "Coût moyen par demande",
+    reportByStatus: "Répartition par statut",
+    reportByDevice: "Répartition par type d'appareil",
+    reportInventoryValue: "Valeur totale du stock actuel"
   }
 };
 

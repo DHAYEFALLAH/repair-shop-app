@@ -442,6 +442,91 @@ async function navigateTo(page) {
             break;
         }
 
+        case 'reports': {
+            const repairsList = await getRepairs();
+            const partsList = await getParts();
+
+            const totalRepairs = repairsList.length;
+            const delivered = repairsList.filter(r => r.status === 'delivered');
+            const totalRevenue = delivered.reduce((sum, r) => sum + (parseFloat(r.cost) || 0), 0);
+            const avgCost = delivered.length > 0 ? Math.round(totalRevenue / delivered.length) : 0;
+            const inventoryValue = partsList.reduce((sum, p) => sum + (p.quantity * p.price), 0);
+
+            const statusKeyMap = {
+                received: 'statusReceived', diagnosing: 'statusDiagnosing', repairing: 'statusRepairing',
+                waiting_parts: 'statusWaitingParts', ready: 'statusReady', delivered: 'statusDelivered'
+            };
+            const deviceTypeKeyMap = {
+                phone: 'deviceTypePhone', laptop: 'deviceTypeLaptop', desktop: 'deviceTypeDesktop',
+                tablet: 'deviceTypeTablet', other: 'deviceTypeOther'
+            };
+
+            function buildBars(counts) {
+                const max = Math.max(1, ...Object.values(counts));
+                return Object.entries(counts).filter(([, c]) => c > 0).map(([label, count]) => `
+                    <div class="report-bar-row">
+                        <div class="report-bar-top"><span>${label}</span><span>${count}</span></div>
+                        <div class="report-bar-track"><div class="report-bar-fill" style="width:${Math.round(count / max * 100)}%"></div></div>
+                    </div>
+                `).join('');
+            }
+
+            const statusCounts = {};
+            Object.values(statusKeyMap).forEach(key => statusCounts[dict[key]] = 0);
+            repairsList.forEach(r => {
+                const label = dict[statusKeyMap[r.status]] || r.status;
+                statusCounts[label] = (statusCounts[label] || 0) + 1;
+            });
+
+            const deviceCounts = {};
+            Object.values(deviceTypeKeyMap).forEach(key => deviceCounts[dict[key]] = 0);
+            repairsList.forEach(r => {
+                const label = dict[deviceTypeKeyMap[r.device_type]] || r.device_type;
+                deviceCounts[label] = (deviceCounts[label] || 0) + 1;
+            });
+
+            innerHTML = `
+                <h1 data-i18n="reportsTitle">${dict.reportsTitle}</h1>
+                <p data-i18n="reportsSubtitle">${dict.reportsSubtitle}</p>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">${totalRepairs}</div>
+                        <div class="stat-label" data-i18n="reportTotalRepairs">${dict.reportTotalRepairs}</div>
+                    </div>
+                    <div class="stat-box success">
+                        <div class="stat-number">${delivered.length}</div>
+                        <div class="stat-label" data-i18n="reportDeliveredRepairs">${dict.reportDeliveredRepairs}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">${totalRevenue.toLocaleString()}</div>
+                        <div class="stat-label" data-i18n="reportTotalRevenue">${dict.reportTotalRevenue}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">${avgCost.toLocaleString()}</div>
+                        <div class="stat-label" data-i18n="reportAvgCost">${dict.reportAvgCost}</div>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3 data-i18n="reportByStatus">${dict.reportByStatus}</h3>
+                    ${buildBars(statusCounts)}
+                </div>
+
+                <div class="report-section">
+                    <h3 data-i18n="reportByDevice">${dict.reportByDevice}</h3>
+                    ${buildBars(deviceCounts)}
+                </div>
+
+                <div class="report-section">
+                    <h3 data-i18n="reportInventoryValue">${dict.reportInventoryValue}</h3>
+                    <div class="stat-number" style="color:#f0b34b;">${inventoryValue.toLocaleString()} DZD</div>
+                </div>
+            `;
+            break;
+        }
+
+
         default:
             // باقي الصفحات (dashboard, repairs, inventory)
             const titles = {

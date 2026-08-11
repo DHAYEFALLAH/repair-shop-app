@@ -1038,3 +1038,48 @@ body {
         display: block !important;
     }
 }
+
+/* ===== صفحة التقارير ===== */
+.report-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px 25px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+}
+
+.report-section h3 {
+    color: #1e2a4a;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+}
+
+.report-bar-row {
+    margin-bottom: 14px;
+}
+
+.report-bar-row:last-child {
+    margin-bottom: 0;
+}
+
+.report-bar-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    margin-bottom: 5px;
+    color: #1e2a4a;
+}
+
+.report-bar-track {
+    background: #f1f5f9;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 10px;
+}
+
+.report-bar-fill {
+    height: 100%;
+    background: #f0b34b;
+    border-radius: 8px;
+    transition: width 0.4s ease;
+}
