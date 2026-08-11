@@ -31,14 +31,34 @@ async function handleLogin(event) {
     return false;
 }
 
-/**
- * التحقق من حالة تسجيل الدخول (في index.html)
- * إذا لم يكن مسجلاً، يتم إعادة التوجيه إلى login.html
- */
+// متغيّر عام يخزّن معرّف محل المستخدم الحالي، متاح لكل ملفات JS الأخرى
+let currentShopId = null;
+
 async function checkAuth() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
         window.location.href = 'login.html';
+        return;
+    }
+
+    // جلب معرّف المحل المرتبط بهذا المستخدم
+    const { data: profile, error } = await supabaseClient
+        .from('profiles')
+        .select('shop_id')
+        .eq('id', session.user.id)
+        .single();
+
+    if (error || !profile) {
+        console.error('تعذر جلب بيانات المحل', error);
+        window.location.href = 'login.html';
+        return;
+    }
+
+    currentShopId = profile.shop_id;
+
+    // إعادة تحميل الصفحة الرئيسية الآن بعد أن أصبح shop_id متوفراً
+    if (typeof initActivePage === 'function') {
+        initActivePage();
     }
 }
 

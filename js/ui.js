@@ -672,7 +672,7 @@ async function addClient(event) {
 
     const { error } = await supabaseClient
         .from('clients')
-        .insert({ name, phone, email: email || null });
+        .insert({ name, phone, email: email || null, shop_id: currentShopId });
 
     if (error) {
         showAlert('حدث خطأ أثناء الإضافة', 'error');
@@ -1010,5 +1010,5 @@ function initActivePage() {
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
     setupAutoCloseMenu();
-    initActivePage();
+    // لا ننادي initActivePage() هنا مباشرة — auth.js هو من يناديها بعد التأكد من shop_id
 });
