@@ -943,7 +943,8 @@ async function addPart(event) {
     const { error } = await supabaseClient.from('parts').insert({
         name: name,
         quantity: quantity || 0,
-        price: price || 0
+        price: price || 0,
+        shop_id: currentShopId
     });
 
     if (error) {
