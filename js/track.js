@@ -50,6 +50,9 @@ async function searchRepairs(event) {
         const statusLabel = dict[STATUS_KEYS[r.status]] || r.status;
         return `
             <div class="repair-card">
+                <div class="repair-card-shop">
+                    <i class="fas fa-store"></i> ${r.shop_name || ''}
+                </div>
                 <div class="repair-card-head">
                     <span>${deviceLabel} — ${r.device_model || ''}</span>
                     <span class="status-badge status-${r.status}">${statusLabel}</span>

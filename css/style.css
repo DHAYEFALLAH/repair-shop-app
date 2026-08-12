@@ -914,6 +914,16 @@ body {
     border: 1px solid #e5e7eb;
 }
 
+.repair-card-shop {
+    font-size: 0.78rem;
+    color: #f0b34b;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .repair-card-head {
     display: flex;
     justify-content: space-between;
