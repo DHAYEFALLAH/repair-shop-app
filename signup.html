@@ -17,12 +17,12 @@
         <div class="login-card">
             <div class="login-header">
                 <i class="fas fa-store login-icon"></i>
-                <h2 data-i18n="signupTitle">إنشاء حساب محل جديد</h2>
+                <h2 id="signupHeading" data-i18n="signupTitle">إنشاء حساب محل جديد</h2>
             </div>
             <form id="signupForm" onsubmit="return handleSignup(event)">
-                <div class="form-group">
+                <div class="form-group" id="shopNameGroup">
                     <label for="shopName" data-i18n="signupShopName">اسم المحل</label>
-                    <input type="text" id="shopName" required />
+                    <input type="text" id="shopName" />
                 </div>
                 <div class="form-group">
                     <label for="username" data-i18n="username">الإيميل</label>

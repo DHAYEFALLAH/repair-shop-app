@@ -131,7 +131,11 @@ const translations = {
     noAccount: "ليس لديك حساب؟",
     signupLink: "أنشئ محلك الآن",
     haveAccount: "لديك حساب بالفعل؟",
-    loginLink: "سجّل الدخول"
+    loginLink: "سجّل الدخول",
+
+    // ===== دعوة أعضاء الفريق =====
+    joinTeamTitle: "انضمام إلى فريق المحل",
+    invalidInvite: "رابط الدعوة غير صالح"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -265,7 +269,11 @@ const translations = {
     noAccount: "Vous n'avez pas de compte ?",
     signupLink: "Créez votre atelier",
     haveAccount: "Vous avez déjà un compte ?",
-    loginLink: "Se connecter"
+    loginLink: "Se connecter",
+
+    // ===== Invitation d'équipe =====
+    joinTeamTitle: "Rejoindre l'équipe de l'atelier",
+    invalidInvite: "Lien d'invitation invalide"
   }
 };
 
