@@ -1095,11 +1095,71 @@ function removeMember(memberId) {
  * تهيئة القائمة عند تحميل الصفحة
  */
 function initActivePage() {
+    if (!isShopActive) {
+        renderLockScreen();
+        return;
+    }
+    renderTrialBanner();
     const firstActive = document.querySelector('.menu-item.active');
     if (firstActive) {
         const page = firstActive.getAttribute('data-page');
         if (page) navigateTo(page);
     }
+}
+
+/**
+ * شاشة قفل كاملة عند انتهاء الفترة التجريبية أو الاشتراك
+ */
+function renderLockScreen() {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+    const isTrialEnded = currentShopStatus === 'trial';
+
+    const sideMenu = document.getElementById('sideMenu');
+    const mainContent = document.getElementById('mainContent');
+    if (sideMenu) sideMenu.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'none';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'lock-screen';
+    overlay.innerHTML = `
+        <div class="lock-card">
+            <i class="fas fa-lock lock-icon"></i>
+            <h2>${isTrialEnded ? dict.trialEndedTitle : dict.subscriptionExpiredTitle}</h2>
+            <p>${isTrialEnded ? dict.trialEndedDesc : dict.subscriptionExpiredDesc}</p>
+            <div class="lock-contact">
+                <p style="font-weight:700;">${dict.contactToRenew}</p>
+                <p><i class="fas fa-phone"></i> +213 775 440 306</p>
+                <p><i class="fas fa-envelope"></i> contact@clickprog.com</p>
+            </div>
+            <button class="btn-secondary" onclick="logout()">${dict.logout}</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+}
+
+/**
+ * بانر تذكير عندما تبقى 3 أيام أو أقل على انتهاء الفترة التجريبية
+ */
+function renderTrialBanner() {
+    if (currentShopStatus !== 'trial' || !currentTrialEndsAt) return;
+
+    const daysLeft = Math.ceil((new Date(currentTrialEndsAt) - new Date()) / (1000 * 60 * 60 * 24));
+    if (daysLeft > 3) return;
+
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    const existing = document.getElementById('trialBanner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'trialBanner';
+    banner.className = 'trial-banner';
+    banner.textContent = dict.trialEndingSoon.replace('{days}', Math.max(daysLeft, 0));
+
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent) mainContent.insertBefore(banner, mainContent.firstChild);
 }
 
 // ==========================================

@@ -155,7 +155,15 @@ const translations = {
     accountRemoved: "تم إزالة حسابك من هذا المحل. تواصل مع صاحب المحل إذا كان هذا خطأً.",
     accountRemoved: "تم إزالة حسابك من هذا المحل. تواصل مع صاحب المحل إذا كان هذا خطأً.",
     existingAccountWrongPassword: "هذا البريد مسجّل مسبقاً بكلمة سر مختلفة. أدخل كلمة السر الصحيحة لهذا الحساب.",
-    alreadyInShop: "هذا الحساب مرتبط بمحل آخر بالفعل ولا يمكن ربطه بمحلين فـ نفس الوقت."
+    alreadyInShop: "هذا الحساب مرتبط بمحل آخر بالفعل ولا يمكن ربطه بمحلين فـ نفس الوقت.",
+
+    // ===== الاشتراك =====
+    trialEndedTitle: "انتهت الفترة التجريبية",
+    trialEndedDesc: "انتهت فترتك التجريبية المجانية (14 يوماً). للاستمرار فـ استعمال التطبيق، يرجى التواصل معنا لتفعيل اشتراكك.",
+    subscriptionExpiredTitle: "انتهى الاشتراك",
+    subscriptionExpiredDesc: "انتهت صلاحية اشتراكك. يرجى التواصل معنا لتجديده والاستمرار فـ استعمال التطبيق.",
+    contactToRenew: "للتفعيل أو التجديد، تواصل معنا عبر:",
+    trialEndingSoon: "تبقّى لك {days} يوم على انتهاء الفترة التجريبية. تواصل معنا لتفعيل اشتراكك وتجنّب توقف الخدمة."
   },
   fr: {
     title: "Atelier de Réparation",
@@ -313,7 +321,15 @@ const translations = {
     accountRemoved: "Votre compte a été retiré de cet atelier. Contactez le propriétaire si c'est une erreur.",
     accountRemoved: "Votre compte a été retiré de cet atelier. Contactez le propriétaire si c'est une erreur.",
     existingAccountWrongPassword: "Cet email est déjà enregistré avec un autre mot de passe. Entrez le mot de passe correct pour ce compte.",
-    alreadyInShop: "Ce compte est déjà lié à un autre atelier et ne peut pas être lié à deux ateliers en même temps."
+    alreadyInShop: "Ce compte est déjà lié à un autre atelier et ne peut pas être lié à deux ateliers en même temps.",
+
+    // ===== Abonnement =====
+    trialEndedTitle: "Période d'essai terminée",
+    trialEndedDesc: "Votre période d'essai gratuite (14 jours) est terminée. Pour continuer à utiliser l'application, veuillez nous contacter pour activer votre abonnement.",
+    subscriptionExpiredTitle: "Abonnement expiré",
+    subscriptionExpiredDesc: "Votre abonnement a expiré. Veuillez nous contacter pour le renouveler et continuer à utiliser l'application.",
+    contactToRenew: "Pour activer ou renouveler, contactez-nous via :",
+    trialEndingSoon: "Il vous reste {days} jour(s) avant la fin de votre période d'essai. Contactez-nous pour activer votre abonnement."
   }
 };
 
