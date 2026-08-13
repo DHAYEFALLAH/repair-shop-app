@@ -442,6 +442,66 @@ async function navigateTo(page) {
             break;
         }
 
+        case 'team': {
+            const { data: members } = await supabaseClient
+                .from('profiles')
+                .select('id, email, role')
+                .eq('shop_id', currentShopId);
+
+            const sortedMembers = (members || []).sort((a, b) =>
+                (a.role === 'owner' ? -1 : 1) - (b.role === 'owner' ? -1 : 1)
+            );
+
+            const basePath = window.location.origin + window.location.pathname.replace('index.html', '');
+            const inviteLink = `${basePath}signup.html?invite=${currentShopId}`;
+
+            innerHTML = `
+                <h1 data-i18n="teamTitle">${dict.teamTitle}</h1>
+                <p data-i18n="teamSubtitle">${dict.teamSubtitle}</p>
+
+                ${currentUserRole === 'owner' ? `
+                <div class="invite-box">
+                    <h3 data-i18n="inviteLinkTitle">${dict.inviteLinkTitle}</h3>
+                    <p data-i18n="inviteLinkDesc">${dict.inviteLinkDesc}</p>
+                    <div class="invite-link-row">
+                        <input type="text" id="inviteLinkInput" readonly value="${inviteLink}" />
+                        <button type="button" class="btn-primary" onclick="copyInviteLink()" data-i18n="copyLink">${dict.copyLink}</button>
+                    </div>
+                </div>
+                ` : ''}
+
+                <div class="clients-list">
+                    <h3 data-i18n="teamTitle">${dict.teamTitle}</h3>
+                    <div class="table-wrapper">
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Email</th>
+                                    <th>${lang === 'ar' ? 'الدور' : 'Rôle'}</th>
+                                    ${currentUserRole === 'owner' ? `<th data-i18n="actions">${dict.actions}</th>` : ''}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${sortedMembers.map((m, index) => `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>${m.email || '-'}</td>
+                                        <td><span class="role-badge role-${m.role}">${m.role === 'owner' ? dict.roleOwner : dict.roleEmployee}</span></td>
+                                        ${currentUserRole === 'owner' ? `
+                                        <td>
+                                            ${m.id !== currentUserId ? `<button class="btn-danger" onclick="removeMember('${m.id}')">${dict.removeMember}</button>` : ''}
+                                        </td>` : ''}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            break;
+        }
+
         case 'reports': {
             const repairsList = await getRepairs();
             const partsList = await getParts();
@@ -992,6 +1052,41 @@ async function adjustPartQuantity(id, delta) {
         return;
     }
     navigateTo('inventory');
+}
+// ==========================================
+
+
+// ==========================================
+// دوال إدارة الفريق (Team Management)
+// ==========================================
+
+function copyInviteLink() {
+    const input = document.getElementById('inviteLinkInput');
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    input.select();
+    navigator.clipboard.writeText(input.value)
+        .then(() => showSuccess(dict.linkCopied))
+        .catch(() => {
+            document.execCommand('copy');
+            showSuccess(dict.linkCopied);
+        });
+}
+
+function removeMember(memberId) {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    showConfirmDialog(dict.confirmRemoveMember, async function () {
+        const { error } = await supabaseClient.from('profiles').delete().eq('id', memberId);
+        if (error) {
+            showAlert('حدث خطأ أثناء إزالة العضو', 'error');
+            return;
+        }
+        navigateTo('team');
+        showSuccess(dict.memberRemoved);
+    });
 }
 // ==========================================
 

@@ -135,7 +135,22 @@ const translations = {
 
     // ===== دعوة أعضاء الفريق =====
     joinTeamTitle: "انضمام إلى فريق المحل",
-    invalidInvite: "رابط الدعوة غير صالح"
+    invalidInvite: "رابط الدعوة غير صالح",
+
+    // ===== إدارة الفريق =====
+    menuTeam: "الفريق",
+    teamTitle: "أعضاء الفريق",
+    teamSubtitle: "إدارة الأشخاص الذين يستعملون حساب محلك",
+    inviteLinkTitle: "رابط دعوة عضو جديد",
+    inviteLinkDesc: "شارك هذا الرابط مع أي شخص تريده أن ينضم لفريق محلك",
+    copyLink: "نسخ الرابط",
+    linkCopied: "تم نسخ الرابط",
+    roleOwner: "مالك",
+    roleEmployee: "موظف",
+    removeMember: "إزالة",
+    confirmRemoveMember: "هل أنت متأكد من إزالة هذا العضو من المحل؟",
+    memberRemoved: "تم إزالة العضو بنجاح",
+    ownerOnlyFeature: "هذه الميزة متاحة فقط لمالك المحل"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -273,7 +288,22 @@ const translations = {
 
     // ===== Invitation d'équipe =====
     joinTeamTitle: "Rejoindre l'équipe de l'atelier",
-    invalidInvite: "Lien d'invitation invalide"
+    invalidInvite: "Lien d'invitation invalide",
+
+    // ===== Gestion de l'équipe =====
+    menuTeam: "Équipe",
+    teamTitle: "Membres de l'équipe",
+    teamSubtitle: "Gérez les personnes qui utilisent le compte de votre atelier",
+    inviteLinkTitle: "Lien d'invitation",
+    inviteLinkDesc: "Partagez ce lien avec toute personne que vous souhaitez ajouter à votre équipe",
+    copyLink: "Copier le lien",
+    linkCopied: "Lien copié",
+    roleOwner: "Propriétaire",
+    roleEmployee: "Employé",
+    removeMember: "Retirer",
+    confirmRemoveMember: "Voulez-vous vraiment retirer ce membre de l'atelier ?",
+    memberRemoved: "Membre retiré avec succès",
+    ownerOnlyFeature: "Cette fonctionnalité est réservée au propriétaire de l'atelier"
   }
 };
 

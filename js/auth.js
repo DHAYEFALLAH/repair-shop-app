@@ -33,6 +33,8 @@ async function handleLogin(event) {
 
 // متغيّر عام يخزّن معرّف محل المستخدم الحالي، متاح لكل ملفات JS الأخرى
 let currentShopId = null;
+let currentUserRole = null;
+let currentUserId = null;
 
 async function checkAuth() {
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -41,10 +43,12 @@ async function checkAuth() {
         return;
     }
 
-    // جلب معرّف المحل المرتبط بهذا المستخدم
+    currentUserId = session.user.id;
+
+    // جلب معرّف المحل ودور المستخدم
     const { data: profile, error } = await supabaseClient
         .from('profiles')
-        .select('shop_id')
+        .select('shop_id, role')
         .eq('id', session.user.id)
         .single();
 
@@ -55,6 +59,7 @@ async function checkAuth() {
     }
 
     currentShopId = profile.shop_id;
+    currentUserRole = profile.role;
 
     // إعادة تحميل الصفحة الرئيسية الآن بعد أن أصبح shop_id متوفراً
     if (typeof initActivePage === 'function') {

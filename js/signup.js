@@ -47,7 +47,7 @@ async function handleSignup(event) {
         // ===== وضع الانضمام لمحل موجود =====
         const { error: profileError } = await supabaseClient
             .from('profiles')
-            .insert({ id: userId, shop_id: inviteShopId, role: 'employee' });
+            .insert({ id: userId, shop_id: inviteShopId, role: 'employee', email: email });
 
         if (profileError) {
             showSignupError(profileError.message);
@@ -77,7 +77,7 @@ async function handleSignup(event) {
 
         const { error: profileError } = await supabaseClient
             .from('profiles')
-            .insert({ id: userId, shop_id: shopId, role: 'owner' });
+            .insert({ id: userId, shop_id: shopId, role: 'owner', email: email });
 
         if (profileError) {
             showSignupError(profileError.message);
