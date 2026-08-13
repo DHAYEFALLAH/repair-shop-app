@@ -152,7 +152,10 @@ const translations = {
     memberRemoved: "تم إزالة العضو بنجاح",
     ownerOnlyFeature: "هذه الميزة متاحة فقط لمالك المحل",
     ownerOnlyFeature: "هذه الميزة متاحة فقط لمالك المحل",
-    accountRemoved: "تم إزالة حسابك من هذا المحل. تواصل مع صاحب المحل إذا كان هذا خطأً."
+    accountRemoved: "تم إزالة حسابك من هذا المحل. تواصل مع صاحب المحل إذا كان هذا خطأً.",
+    accountRemoved: "تم إزالة حسابك من هذا المحل. تواصل مع صاحب المحل إذا كان هذا خطأً.",
+    existingAccountWrongPassword: "هذا البريد مسجّل مسبقاً بكلمة سر مختلفة. أدخل كلمة السر الصحيحة لهذا الحساب.",
+    alreadyInShop: "هذا الحساب مرتبط بمحل آخر بالفعل ولا يمكن ربطه بمحلين فـ نفس الوقت."
   },
   fr: {
     title: "Atelier de Réparation",
@@ -307,7 +310,10 @@ const translations = {
     memberRemoved: "Membre retiré avec succès",
     ownerOnlyFeature: "Cette fonctionnalité est réservée au propriétaire de l'atelier",
     ownerOnlyFeature: "Cette fonctionnalité est réservée au propriétaire de l'atelier",
-    accountRemoved: "Votre compte a été retiré de cet atelier. Contactez le propriétaire si c'est une erreur."
+    accountRemoved: "Votre compte a été retiré de cet atelier. Contactez le propriétaire si c'est une erreur.",
+    accountRemoved: "Votre compte a été retiré de cet atelier. Contactez le propriétaire si c'est une erreur.",
+    existingAccountWrongPassword: "Cet email est déjà enregistré avec un autre mot de passe. Entrez le mot de passe correct pour ce compte.",
+    alreadyInShop: "Ce compte est déjà lié à un autre atelier et ne peut pas être lié à deux ateliers en même temps."
   }
 };
 
