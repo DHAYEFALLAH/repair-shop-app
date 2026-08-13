@@ -2,6 +2,10 @@
 // إدارة المصادقة عبر Supabase Authentication
 // ==========================================
 
+let currentShopId = null;
+let currentUserRole = null;
+let currentUserId = null;
+
 /**
  * التحقق من بيانات الدخول (يُستخدم في login.html)
  */
@@ -16,13 +20,27 @@ async function handleLogin(event) {
     errorEl.style.display = 'none';
     if (submitBtn) submitBtn.disabled = true;
 
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({
+        email, password
+    });
 
-    if (error) {
-        const lang = document.documentElement.lang || 'ar';
-        const dict = (lang === 'ar') ? translations.ar : translations.fr;
-        errorEl.textContent = dict.loginError || 'اسم المستخدم أو كلمة المرور غير صحيحة';
-        errorEl.style.display = 'block';
+    if (signInError) {
+        showLoginError('loginError');
+        if (submitBtn) submitBtn.disabled = false;
+        return false;
+    }
+
+    // ===== تحقق فعلي: هل مازال هذا الحساب عضواً في أي محل؟ =====
+    const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('shop_id')
+        .eq('id', signInData.user.id)
+        .single();
+
+    if (!profile) {
+        // تسجيل خروج فوري وحقيقي — لا نترك جلسة معلّقة
+        await supabaseClient.auth.signOut();
+        showLoginError('accountRemoved');
         if (submitBtn) submitBtn.disabled = false;
         return false;
     }
@@ -31,11 +49,17 @@ async function handleLogin(event) {
     return false;
 }
 
-// متغيّر عام يخزّن معرّف محل المستخدم الحالي، متاح لكل ملفات JS الأخرى
-let currentShopId = null;
-let currentUserRole = null;
-let currentUserId = null;
+function showLoginError(key) {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+    const errorEl = document.getElementById('loginError');
+    errorEl.textContent = dict[key] || dict.loginError;
+    errorEl.style.display = 'block';
+}
 
+/**
+ * التحقق من حالة تسجيل الدخول (في index.html)
+ */
 async function checkAuth() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
@@ -45,7 +69,6 @@ async function checkAuth() {
 
     currentUserId = session.user.id;
 
-    // جلب معرّف المحل ودور المستخدم
     const { data: profile, error } = await supabaseClient
         .from('profiles')
         .select('shop_id, role')
@@ -53,15 +76,15 @@ async function checkAuth() {
         .single();
 
     if (error || !profile) {
-        console.error('تعذر جلب بيانات المحل', error);
-        window.location.href = 'login.html';
+        // تمت إزالته من المحل بعد أن كانت له جلسة نشطة — نسجّل خروجه فعلياً
+        await supabaseClient.auth.signOut();
+        window.location.href = 'login.html?removed=1';
         return;
     }
 
     currentShopId = profile.shop_id;
     currentUserRole = profile.role;
 
-    // إعادة تحميل الصفحة الرئيسية الآن بعد أن أصبح shop_id متوفراً
     if (typeof initActivePage === 'function') {
         initActivePage();
     }
@@ -80,11 +103,27 @@ if (document.getElementById('sideMenu')) {
     checkAuth();
 }
 
-// إذا كنا في صفحة الدخول وهو مسجل دخول أصلاً، نوجهه للرئيسية مباشرة
+// إذا كنا في صفحة الدخول
 if (document.getElementById('loginForm')) {
-    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    // إذا كان مسجل دخول أصلاً بجلسة صالحة (وعضويته مازالت قائمة)، وجّهه للرئيسية
+    supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
         if (session) {
-            window.location.href = 'index.html';
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('shop_id')
+                .eq('id', session.user.id)
+                .single();
+            if (profile) {
+                window.location.href = 'index.html';
+            }
         }
     });
+
+    // إذا وصل من إعادة توجيه بسبب إزالته من المحل، نعرض رسالة واضحة فوراً
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('removed') === '1') {
+        document.addEventListener('DOMContentLoaded', () => {
+            showLoginError('accountRemoved');
+        });
+    }
 }

@@ -150,7 +150,9 @@ const translations = {
     removeMember: "إزالة",
     confirmRemoveMember: "هل أنت متأكد من إزالة هذا العضو من المحل؟",
     memberRemoved: "تم إزالة العضو بنجاح",
-    ownerOnlyFeature: "هذه الميزة متاحة فقط لمالك المحل"
+    ownerOnlyFeature: "هذه الميزة متاحة فقط لمالك المحل",
+    ownerOnlyFeature: "هذه الميزة متاحة فقط لمالك المحل",
+    accountRemoved: "تم إزالة حسابك من هذا المحل. تواصل مع صاحب المحل إذا كان هذا خطأً."
   },
   fr: {
     title: "Atelier de Réparation",
@@ -303,7 +305,9 @@ const translations = {
     removeMember: "Retirer",
     confirmRemoveMember: "Voulez-vous vraiment retirer ce membre de l'atelier ?",
     memberRemoved: "Membre retiré avec succès",
-    ownerOnlyFeature: "Cette fonctionnalité est réservée au propriétaire de l'atelier"
+    ownerOnlyFeature: "Cette fonctionnalité est réservée au propriétaire de l'atelier",
+    ownerOnlyFeature: "Cette fonctionnalité est réservée au propriétaire de l'atelier",
+    accountRemoved: "Votre compte a été retiré de cet atelier. Contactez le propriétaire si c'est une erreur."
   }
 };
 
