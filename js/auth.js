@@ -10,6 +10,7 @@ let currentShopStatus = null;
 let currentTrialEndsAt = null;
 let currentSubscriptionExpiresAt = null;
 let isShopActive = false;
+let isSuperAdmin = false;
 
 /**
  * التحقق من بيانات الدخول (يُستخدم في login.html)
@@ -84,7 +85,7 @@ async function checkAuth() {
 
     const { data: profile, error } = await supabaseClient
         .from('profiles')
-        .select('shop_id, role, shops(name, subscription_status, trial_ends_at, subscription_expires_at)')
+        .select('shop_id, role, is_super_admin, shops(name, subscription_status, trial_ends_at, subscription_expires_at)')
         .eq('id', session.user.id)
         .single();
 
@@ -101,6 +102,12 @@ async function checkAuth() {
     currentTrialEndsAt = profile.shops?.trial_ends_at || null;
     currentSubscriptionExpiresAt = profile.shops?.subscription_expires_at || null;
     isShopActive = computeIsActive(currentShopStatus, currentTrialEndsAt, currentSubscriptionExpiresAt);
+    isSuperAdmin = profile.is_super_admin === true;
+
+    const adminLink = document.getElementById('adminMenuLink');
+    if (adminLink && isSuperAdmin) {
+        adminLink.style.display = 'flex';
+    }
 
     if (typeof initActivePage === 'function') {
         initActivePage();
