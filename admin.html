@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="adminTitle">لوحة إدارة المحلات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="main-content" style="margin:0;padding:25px 30px;">
+        <div class="page-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+                <div>
+                    <h1 data-i18n="adminTitle">لوحة إدارة المحلات</h1>
+                    <p data-i18n="adminSubtitle">نظرة شاملة على كل المحلات المسجّلة</p>
+                </div>
+                <button class="btn-secondary" onclick="adminLogout()" data-i18n="logout">تسجيل الخروج</button>
+            </div>
+
+            <div class="table-wrapper" style="margin-top:20px;">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="colShop">المحل</th>
+                            <th data-i18n="colOwner">المالك</th>
+                            <th data-i18n="colMembers">الأعضاء</th>
+                            <th data-i18n="colStatus">الحالة</th>
+                            <th data-i18n="colDaysLeft">الأيام المتبقية</th>
+                            <th data-i18n="actions">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shopsTableBody">
+                        <tr><td colspan="6" style="text-align:center;padding:20px;">...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

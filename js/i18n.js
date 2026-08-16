@@ -163,7 +163,23 @@ const translations = {
     subscriptionExpiredTitle: "انتهى الاشتراك",
     subscriptionExpiredDesc: "انتهت صلاحية اشتراكك. يرجى التواصل معنا لتجديده والاستمرار فـ استعمال التطبيق.",
     contactToRenew: "للتفعيل أو التجديد، تواصل معنا عبر:",
-    trialEndingSoon: "تبقّى لك {days} يوم على انتهاء الفترة التجريبية. تواصل معنا لتفعيل اشتراكك وتجنّب توقف الخدمة."
+    trialEndingSoon: "تبقّى لك {days} يوم على انتهاء الفترة التجريبية. تواصل معنا لتفعيل اشتراكك وتجنّب توقف الخدمة.",
+
+    // ===== لوحة الإدارة =====
+    adminTitle: "لوحة إدارة المحلات",
+    adminSubtitle: "نظرة شاملة على كل المحلات المسجّلة",
+    colShop: "المحل",
+    colOwner: "المالك",
+    colMembers: "الأعضاء",
+    colStatus: "الحالة",
+    colDaysLeft: "الأيام المتبقية",
+    statusTrial: "فترة تجريبية",
+    statusActive: "نشط",
+    statusExpired: "منتهي",
+    activateBtn: "تفعيل",
+    activateMonthsLabel: "عدد الأشهر",
+    activateSuccess: "تم تفعيل الاشتراك بنجاح",
+    accessDenied: "هذه الصفحة غير متاحة لك"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -329,7 +345,23 @@ const translations = {
     subscriptionExpiredTitle: "Abonnement expiré",
     subscriptionExpiredDesc: "Votre abonnement a expiré. Veuillez nous contacter pour le renouveler et continuer à utiliser l'application.",
     contactToRenew: "Pour activer ou renouveler, contactez-nous via :",
-    trialEndingSoon: "Il vous reste {days} jour(s) avant la fin de votre période d'essai. Contactez-nous pour activer votre abonnement."
+    trialEndingSoon: "Il vous reste {days} jour(s) avant la fin de votre période d'essai. Contactez-nous pour activer votre abonnement.",
+
+    // ===== Panneau d'administration =====
+    adminTitle: "Gestion des ateliers",
+    adminSubtitle: "Vue d'ensemble de tous les ateliers inscrits",
+    colShop: "Atelier",
+    colOwner: "Propriétaire",
+    colMembers: "Membres",
+    colStatus: "Statut",
+    colDaysLeft: "Jours restants",
+    statusTrial: "Essai gratuit",
+    statusActive: "Actif",
+    statusExpired: "Expiré",
+    activateBtn: "Activer",
+    activateMonthsLabel: "Nombre de mois",
+    activateSuccess: "Abonnement activé avec succès",
+    accessDenied: "Cette page ne vous est pas accessible"
   }
 };
 
