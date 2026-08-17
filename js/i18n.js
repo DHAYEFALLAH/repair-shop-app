@@ -179,7 +179,10 @@ const translations = {
     activateBtn: "تفعيل",
     activateMonthsLabel: "عدد الأشهر",
     activateSuccess: "تم تفعيل الاشتراك بنجاح",
-    accessDenied: "هذه الصفحة غير متاحة لك"
+    accessDenied: "هذه الصفحة غير متاحة لك",
+    subscribeNowBtn: "اشترك الآن",
+    chooseMonthsLabel: "عدد الأشهر (500 دج شهرياً)",
+    billingError: "حدث خطأ أثناء تجهيز الدفع، حاول مجدداً"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -361,7 +364,10 @@ const translations = {
     activateBtn: "Activer",
     activateMonthsLabel: "Nombre de mois",
     activateSuccess: "Abonnement activé avec succès",
-    accessDenied: "Cette page ne vous est pas accessible"
+    accessDenied: "Cette page ne vous est pas accessible",
+    subscribeNowBtn: "S'abonner maintenant",
+    chooseMonthsLabel: "Nombre de mois (500 DZD/mois)",
+    billingError: "Une erreur est survenue lors de la préparation du paiement, réessayez"
   }
 };
 

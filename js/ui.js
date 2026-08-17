@@ -1132,10 +1132,57 @@ function renderLockScreen() {
                 <p><i class="fas fa-phone"></i> +213 775 440 306</p>
                 <p><i class="fas fa-envelope"></i> contact@clickprog.com</p>
             </div>
+            <button class="btn-primary" onclick="startCheckout()" style="width:100%;margin-bottom:10px;">${dict.subscribeNowBtn}</button>
             <button class="btn-secondary" onclick="logout()">${dict.logout}</button>
         </div>
     `;
     document.body.appendChild(overlay);
+}
+
+async function startCheckout() {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    if (currentUserRole !== 'owner') {
+        showAlert(dict.ownerOnlyFeature, 'warning');
+        return;
+    }
+
+    const { value: months } = await Swal.fire({
+        title: dict.subscribeNowBtn,
+        input: 'number',
+        inputLabel: dict.chooseMonthsLabel,
+        inputValue: 1,
+        inputAttributes: { min: 1, max: 24 },
+        showCancelButton: true
+    });
+
+    if (!months) return;
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify({ months: parseInt(months) })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.checkout_url) {
+            showAlert(dict.billingError, 'error');
+            return;
+        }
+
+        window.location.href = data.checkout_url;
+    } catch (e) {
+        console.error(e);
+        showAlert(dict.billingError, 'error');
+    }
 }
 
 /**
