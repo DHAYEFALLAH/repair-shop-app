@@ -182,7 +182,18 @@ const translations = {
     accessDenied: "هذه الصفحة غير متاحة لك",
     subscribeNowBtn: "اشترك الآن",
     chooseMonthsLabel: "عدد الأشهر (500 دج شهرياً)",
-    billingError: "حدث خطأ أثناء تجهيز الدفع، حاول مجدداً"
+    billingError: "حدث خطأ أثناء تجهيز الدفع، حاول مجدداً",
+
+    // ===== الدفع اليدوي =====
+    payManualTitle: "طريقة الدفع",
+    payManualDesc: "حوّل المبلغ عبر BaridiMob للرقم التالي، ثم اضغط \"لقد دفعت\"",
+    baridiMobNumber: "رقم BaridiMob",
+    monthlyPriceNote: "500 دج شهرياً",
+    iPaidBtn: "لقد دفعت",
+    choosePaidMonthsLabel: "كم شهر دفعت؟",
+    paymentClaimSuccess: "تم إرسال إشعارك بنجاح. سيتم تفعيل اشتراكك خلال وقت قصير.",
+    contactFastNote: "للتسريع، تواصل معنا مباشرة عبر واتساب:",
+    paymentPendingNote: "تم إرسال إشعار الدفع، بانتظار التفعيل من طرفنا..."
   },
   fr: {
     title: "Atelier de Réparation",
@@ -367,7 +378,18 @@ const translations = {
     accessDenied: "Cette page ne vous est pas accessible",
     subscribeNowBtn: "S'abonner maintenant",
     chooseMonthsLabel: "Nombre de mois (500 DZD/mois)",
-    billingError: "Une erreur est survenue lors de la préparation du paiement, réessayez"
+    billingError: "Une erreur est survenue lors de la préparation du paiement, réessayez",
+
+    // ===== Paiement manuel =====
+    payManualTitle: "Méthode de paiement",
+    payManualDesc: "Transférez le montant via BaridiMob au numéro suivant, puis cliquez sur \"J'ai payé\"",
+    baridiMobNumber: "Numéro BaridiMob",
+    monthlyPriceNote: "500 DZD/mois",
+    iPaidBtn: "J'ai payé",
+    choosePaidMonthsLabel: "Combien de mois avez-vous payé ?",
+    paymentClaimSuccess: "Votre notification a été envoyée avec succès. Votre abonnement sera activé sous peu.",
+    contactFastNote: "Pour accélérer, contactez-nous directement via WhatsApp :",
+    paymentPendingNote: "Notification de paiement envoyée, en attente d'activation..."
   }
 };
 

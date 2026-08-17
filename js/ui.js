@@ -1114,6 +1114,8 @@ function renderLockScreen() {
     const lang = document.documentElement.lang || 'ar';
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
     const isTrialEnded = currentShopStatus === 'trial';
+    const BARIDIMOB_NUMBER = '0555 00 00 00'; // بدّل هذا الرقم برقمك الحقيقي
+    const WHATSAPP_NUMBER = '0555 00 00 00';  // بدّل هذا الرقم برقمك الحقيقي
 
     const sideMenu = document.getElementById('sideMenu');
     const mainContent = document.getElementById('mainContent');
@@ -1122,21 +1124,87 @@ function renderLockScreen() {
 
     const overlay = document.createElement('div');
     overlay.className = 'lock-screen';
+    overlay.id = 'lockScreenOverlay';
     overlay.innerHTML = `
         <div class="lock-card">
             <i class="fas fa-lock lock-icon"></i>
             <h2>${isTrialEnded ? dict.trialEndedTitle : dict.subscriptionExpiredTitle}</h2>
             <p>${isTrialEnded ? dict.trialEndedDesc : dict.subscriptionExpiredDesc}</p>
-            <div class="lock-contact">
-                <p style="font-weight:700;">${dict.contactToRenew}</p>
-                <p><i class="fas fa-phone"></i> +213 775 440 306</p>
-                <p><i class="fas fa-envelope"></i> contact@clickprog.com</p>
-            </div>
-            <button class="btn-primary" onclick="startCheckout()" style="width:100%;margin-bottom:10px;">${dict.subscribeNowBtn}</button>
+
+            ${currentUserRole === 'owner' ? `
+                <div class="lock-contact">
+                    <p style="font-weight:700;">${dict.payManualTitle}</p>
+                    <p style="font-size:0.85rem;">${dict.payManualDesc}</p>
+                    <p style="font-size:1.2rem;font-weight:700;color:#1e2a4a;margin:10px 0 !important;">
+                        <i class="fas fa-mobile-screen-button"></i> ${BARIDIMOB_NUMBER}
+                    </p>
+                    <p style="font-size:0.8rem;color:#6b7280;">${dict.monthlyPriceNote}</p>
+                </div>
+                <div id="paymentActionArea">
+                    <button class="btn-primary" onclick="claimPayment()" style="width:100%;margin-bottom:10px;">
+                        <i class="fas fa-check"></i> ${dict.iPaidBtn}
+                    </button>
+                </div>
+                <p style="font-size:0.8rem;color:#6b7280;margin-bottom:16px;">
+                    ${dict.contactFastNote}<br/>
+                    <a href="https://wa.me/213${WHATSAPP_NUMBER.replace(/\D/g,'').replace(/^0/,'')}" target="_blank" style="color:#16a34a;font-weight:700;text-decoration:none;">
+                        <i class="fab fa-whatsapp"></i> ${WHATSAPP_NUMBER}
+                    </a>
+                </p>
+            ` : `
+                <div class="lock-contact">
+                    <p style="font-weight:700;">${dict.contactToRenew}</p>
+                    <p><i class="fas fa-phone"></i> ${BARIDIMOB_NUMBER}</p>
+                </div>
+            `}
+
             <button class="btn-secondary" onclick="logout()">${dict.logout}</button>
         </div>
     `;
     document.body.appendChild(overlay);
+
+    // إذا سبق وأرسل صاحب المحل ادعاء دفع، نوريه تذكيراً بدل زر "لقد دفعت" مجدداً
+    if (currentShopPaymentClaimedAt) {
+        const actionArea = document.getElementById('paymentActionArea');
+        if (actionArea) {
+            actionArea.innerHTML = `<p class="trial-banner" style="background:#dbeafe;color:#1e40af;">${dict.paymentPendingNote}</p>`;
+        }
+    }
+}
+
+/**
+ * تسجيل ادعاء الدفع من صاحب المحل
+ */
+async function claimPayment() {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+
+    const { value: months } = await Swal.fire({
+        title: dict.iPaidBtn,
+        input: 'number',
+        inputLabel: dict.choosePaidMonthsLabel,
+        inputValue: 1,
+        inputAttributes: { min: 1, max: 24 },
+        showCancelButton: true
+    });
+
+    if (!months) return;
+
+    const { error } = await supabaseClient.rpc('claim_payment', { p_months: parseInt(months) });
+
+    if (error) {
+        showAlert(dict.billingError, 'error');
+        return;
+    }
+
+    currentShopPaymentClaimedAt = new Date().toISOString();
+
+    const actionArea = document.getElementById('paymentActionArea');
+    if (actionArea) {
+        actionArea.innerHTML = `<p class="trial-banner" style="background:#dbeafe;color:#1e40af;">${dict.paymentPendingNote}</p>`;
+    }
+
+    Swal.fire({ icon: 'success', text: dict.paymentClaimSuccess, timer: 2000, showConfirmButton: false });
 }
 
 async function startCheckout() {

@@ -29,7 +29,7 @@ async function loadShops() {
 
     const { data: shops, error } = await supabaseClient
         .from('shops')
-        .select('id, name, subscription_status, trial_ends_at, subscription_expires_at, created_at')
+        .select('id, name, subscription_status, trial_ends_at, subscription_expires_at, payment_claimed_at, payment_claimed_months, created_at')
         .order('created_at', { ascending: false });
 
     const { data: profiles } = await supabaseClient
@@ -67,20 +67,29 @@ async function loadShops() {
         const daysText = daysLeft !== null ? `${daysLeft} ${lang === 'ar' ? 'يوم' : 'j'}` : '-';
         const shopNameSafe = s.name.replace(/'/g, "\\'");
 
+        const paymentBadge = s.payment_claimed_at
+            ? `<div style="font-size:0.75rem;color:#b45309;margin-top:4px;">
+                 <i class="fas fa-bell"></i> ${lang === 'ar' ? 'ادّعى دفع' : 'A déclaré un paiement'} ${s.payment_claimed_months} ${lang === 'ar' ? 'شهر' : 'mois'}
+                 <br/>${new Date(s.payment_claimed_at).toLocaleString(lang === 'ar' ? 'ar-DZ' : 'fr-FR')}
+               </div>`
+            : '';
+
+        const rowStyle = s.payment_claimed_at ? 'style="background:#fffbeb;"' : '';
+
         return `
-            <tr>
+            <tr ${rowStyle}>
                 <td>${s.name}</td>
                 <td>${owner ? owner.email : '-'}</td>
                 <td>${memberCount}</td>
-                <td>${statusHtml}</td>
+                <td>${statusHtml}${paymentBadge}</td>
                 <td>${daysText}</td>
-                <td><button class="btn-primary" onclick="activateShop('${s.id}', '${shopNameSafe}')">${dict.activateBtn}</button></td>
+                <td><button class="btn-primary" onclick="activateShop('${s.id}', '${shopNameSafe}', ${s.payment_claimed_months || 1})">${dict.activateBtn}</button></td>
             </tr>
         `;
     }).join('');
 }
 
-async function activateShop(shopId, shopName) {
+async function activateShop(shopId, shopName, suggestedMonths = 1) {
     const lang = document.documentElement.lang || 'ar';
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
 
@@ -88,7 +97,7 @@ async function activateShop(shopId, shopName) {
         title: `${dict.activateBtn} — ${shopName}`,
         input: 'number',
         inputLabel: dict.activateMonthsLabel,
-        inputValue: 1,
+        inputValue: suggestedMonths,
         inputAttributes: { min: 1, max: 24 },
         showCancelButton: true
     });
@@ -100,7 +109,12 @@ async function activateShop(shopId, shopName) {
 
     const { error } = await supabaseClient
         .from('shops')
-        .update({ subscription_status: 'active', subscription_expires_at: expiresAt.toISOString() })
+        .update({
+            subscription_status: 'active',
+            subscription_expires_at: expiresAt.toISOString(),
+            payment_claimed_at: null,
+            payment_claimed_months: null
+        })
         .eq('id', shopId);
 
     if (error) {
