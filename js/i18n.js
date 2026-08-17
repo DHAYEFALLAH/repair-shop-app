@@ -193,7 +193,43 @@ const translations = {
     choosePaidMonthsLabel: "كم شهر دفعت؟",
     paymentClaimSuccess: "تم إرسال إشعارك بنجاح. سيتم تفعيل اشتراكك خلال وقت قصير.",
     contactFastNote: "للتسريع، تواصل معنا مباشرة عبر واتساب:",
-    paymentPendingNote: "تم إرسال إشعار الدفع، بانتظار التفعيل من طرفنا..."
+    paymentPendingNote: "تم إرسال إشعار الدفع، بانتظار التفعيل من طرفنا...",
+
+    // ===== صفحة الهبوط =====
+    landingNavFeatures: "المميزات",
+    landingNavPricing: "الأسعار",
+    landingNavLogin: "تسجيل الدخول",
+    landingHeroTitle: "تسيير ورشة إصلاح الهواتف والحواسيب، بلا تعقيد",
+    landingHeroSubtitle: "تطبيق بسيط يجمع لك طلبات الإصلاح، العملاء، المخزون، والتقارير في مكان واحد — بالعربية والفرنسية.",
+    landingCtaSignup: "جرّب مجاناً 14 يوماً",
+    landingCtaLogin: "لدي حساب بالفعل",
+    landingNoCard: "بلا بطاقة بنكية، بلا التزام",
+
+    landingFeaturesTitle: "كل شيء يحتاجه محلك",
+    landingFeature1Title: "تذاكر إصلاح ذكية",
+    landingFeature1Desc: "تابع كل جهاز من الاستلام للتسليم، بحالات واضحة: فحص، إصلاح، بانتظار قطع، جاهز.",
+    landingFeature2Title: "سجل العملاء",
+    landingFeature2Desc: "كل زبون وتاريخ أجهزته محفوظ ومنظّم، تلقاه بثواني.",
+    landingFeature3Title: "تتبّع المخزون",
+    landingFeature3Desc: "تنبيه تلقائي كي قطعة غيار توشك تنفد، قبل ما توقفك فـ العمل.",
+    landingFeature4Title: "تقارير فورية",
+    landingFeature4Desc: "إيرادات، طلبات مسلَّمة، وتوزيع حسب النوع — نظرة واحدة تكفي.",
+    landingFeature5Title: "فريق العمل",
+    landingFeature5Desc: "ضيف عمّالك لنفس الحساب، كل واحد بصلاحياته.",
+    landingFeature6Title: "تتبّع للزبون",
+    landingFeature6Desc: "زبونك يشوف حالة جهازو بنفسه، بلا ما يتصل بيك ولا يسجّل دخول.",
+
+    landingPricingTitle: "سعر واحد بسيط",
+    landingPricingSubtitle: "بلا خطط معقدة، بلا رسوم خفية",
+    landingPriceAmount: "500 دج",
+    landingPricePeriod: "شهرياً",
+    landingPriceFeature1: "طلبات وعملاء ومخزون بلا حدود",
+    landingPriceFeature2: "أعضاء فريق بلا حدود",
+    landingPriceFeature3: "دعم عبر واتساب",
+    landingTrialNote: "أول 14 يوماً مجاناً بالكامل",
+
+    landingFooterTagline: "صُنع لمحلات الإصلاح فـ الجزائر",
+    landingFooterRights: "جميع الحقوق محفوظة"
   },
   fr: {
     title: "Atelier de Réparation",
@@ -389,7 +425,43 @@ const translations = {
     choosePaidMonthsLabel: "Combien de mois avez-vous payé ?",
     paymentClaimSuccess: "Votre notification a été envoyée avec succès. Votre abonnement sera activé sous peu.",
     contactFastNote: "Pour accélérer, contactez-nous directement via WhatsApp :",
-    paymentPendingNote: "Notification de paiement envoyée, en attente d'activation..."
+    paymentPendingNote: "Notification de paiement envoyée, en attente d'activation...",
+
+    // ===== Page d'accueil =====
+    landingNavFeatures: "Fonctionnalités",
+    landingNavPricing: "Tarifs",
+    landingNavLogin: "Connexion",
+    landingHeroTitle: "Gérez votre atelier de réparation, sans complications",
+    landingHeroSubtitle: "Une application simple qui réunit vos demandes de réparation, clients, stock et rapports en un seul endroit — en arabe et en français.",
+    landingCtaSignup: "Essayez gratuitement 14 jours",
+    landingCtaLogin: "J'ai déjà un compte",
+    landingNoCard: "Sans carte bancaire, sans engagement",
+
+    landingFeaturesTitle: "Tout ce dont votre atelier a besoin",
+    landingFeature1Title: "Suivi intelligent des réparations",
+    landingFeature1Desc: "Suivez chaque appareil de la réception à la livraison, avec des statuts clairs.",
+    landingFeature2Title: "Fiches clients",
+    landingFeature2Desc: "Chaque client et l'historique de ses appareils, organisés et accessibles en secondes.",
+    landingFeature3Title: "Suivi du stock",
+    landingFeature3Desc: "Alerte automatique quand une pièce est presque épuisée.",
+    landingFeature4Title: "Rapports instantanés",
+    landingFeature4Desc: "Revenus, demandes livrées, répartition par type — en un coup d'œil.",
+    landingFeature5Title: "Travail d'équipe",
+    landingFeature5Desc: "Ajoutez vos employés au même compte, chacun avec ses droits.",
+    landingFeature6Title: "Suivi pour le client",
+    landingFeature6Desc: "Votre client consulte l'état de son appareil lui-même, sans appel ni connexion.",
+
+    landingPricingTitle: "Un seul tarif, simple",
+    landingPricingSubtitle: "Pas de plans compliqués, pas de frais cachés",
+    landingPriceAmount: "500 DZD",
+    landingPricePeriod: "par mois",
+    landingPriceFeature1: "Demandes, clients et stock illimités",
+    landingPriceFeature2: "Membres d'équipe illimités",
+    landingPriceFeature3: "Support via WhatsApp",
+    landingTrialNote: "Les 14 premiers jours sont entièrement gratuits",
+
+    landingFooterTagline: "Conçu pour les ateliers de réparation en Algérie",
+    landingFooterRights: "Tous droits réservés"
   }
 };
 
