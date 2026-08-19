@@ -13,7 +13,7 @@
 
     <div class="main-content" style="margin:0;padding:25px 30px;">
         <div class="page-content">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
                 <div>
                     <h1 data-i18n="adminTitle">لوحة إدارة المحلات</h1>
                     <p data-i18n="adminSubtitle">نظرة شاملة على كل المحلات المسجّلة</p>
@@ -21,7 +21,23 @@
                 <button class="btn-secondary" onclick="adminLogout()" data-i18n="logout">تسجيل الخروج</button>
             </div>
 
-            <div class="table-wrapper" style="margin-top:20px;">
+            <!-- بطاقات الإحصائيات -->
+            <div class="stats-grid" id="adminStats"></div>
+
+            <!-- شريط البحث والفلترة -->
+            <div class="toolbar-admin" style="display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;">
+                <input type="text" id="searchInput" class="language-select" style="flex:1;min-width:220px;" data-i18n-placeholder="searchShopsPlaceholder" placeholder="ابحث باسم المحل أو إيميل المالك..." oninput="applyFilters()" />
+                <select id="statusFilter" class="language-select" style="width:auto;" onchange="applyFilters()">
+                    <option value="all" data-i18n="filterAll">الكل</option>
+                    <option value="trial" data-i18n="filterTrial">فترة تجريبية</option>
+                    <option value="active" data-i18n="filterActive">نشط</option>
+                    <option value="expired" data-i18n="filterExpired">منتهي</option>
+                    <option value="suspended" data-i18n="filterSuspended">معلّق</option>
+                    <option value="pending" data-i18n="filterPending">بانتظار الدفع</option>
+                </select>
+            </div>
+
+            <div class="table-wrapper">
                 <table class="clients-table">
                     <thead>
                         <tr>
