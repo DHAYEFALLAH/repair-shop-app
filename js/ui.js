@@ -1114,8 +1114,9 @@ function renderLockScreen() {
     const lang = document.documentElement.lang || 'ar';
     const dict = (lang === 'ar') ? translations.ar : translations.fr;
     const isTrialEnded = currentShopStatus === 'trial';
-    const BARIDIMOB_NUMBER = '0555 00 00 00'; // بدّل هذا الرقم برقمك الحقيقي
-    const WHATSAPP_NUMBER = '0555 00 00 00';  // بدّل هذا الرقم برقمك الحقيقي
+    const isSuspended = currentShopSuspended === true;
+    const BARIDIMOB_NUMBER = '0775 44 03 06'; // بدّل هذا الرقم برقمك الحقيقي
+    const WHATSAPP_NUMBER = '0775 44 03 06';  // بدّل هذا الرقم برقمك الحقيقي
 
     const sideMenu = document.getElementById('sideMenu');
     const mainContent = document.getElementById('mainContent');
@@ -1128,10 +1129,10 @@ function renderLockScreen() {
     overlay.innerHTML = `
         <div class="lock-card">
             <i class="fas fa-lock lock-icon"></i>
-            <h2>${isTrialEnded ? dict.trialEndedTitle : dict.subscriptionExpiredTitle}</h2>
-            <p>${isTrialEnded ? dict.trialEndedDesc : dict.subscriptionExpiredDesc}</p>
+            <h2>${isSuspended ? dict.shopSuspendedTitle : (isTrialEnded ? dict.trialEndedTitle : dict.subscriptionExpiredTitle)}</h2>
+            <p>${isSuspended ? dict.shopSuspendedDesc : (isTrialEnded ? dict.trialEndedDesc : dict.subscriptionExpiredDesc)}</p>
 
-            ${currentUserRole === 'owner' ? `
+            ${(currentUserRole === 'owner' && !isSuspended) ? `
                 <div class="lock-contact">
                     <p style="font-weight:700;">${dict.payManualTitle}</p>
                     <p style="font-size:0.85rem;">${dict.payManualDesc}</p>

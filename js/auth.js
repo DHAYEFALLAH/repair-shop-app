@@ -12,6 +12,7 @@ let currentSubscriptionExpiresAt = null;
 let isShopActive = false;
 let isSuperAdmin = false;
 let currentShopPaymentClaimedAt = null;
+let currentShopSuspended = false;
 
 /**
  * التحقق من بيانات الدخول (يُستخدم في login.html)
@@ -65,7 +66,8 @@ function showLoginError(key) {
 /**
  * حساب هل المحل نشط حالياً (نفس منطق الدالة SQL، لأغراض الواجهة فقط)
  */
-function computeIsActive(status, trialEndsAt, subExpiresAt) {
+function computeIsActive(status, trialEndsAt, subExpiresAt, suspended) {
+    if (suspended) return false;
     const now = new Date();
     if (status === 'active' && subExpiresAt && new Date(subExpiresAt) > now) return true;
     if (status === 'trial' && trialEndsAt && new Date(trialEndsAt) > now) return true;
@@ -86,7 +88,7 @@ async function checkAuth() {
 
     const { data: profile, error } = await supabaseClient
         .from('profiles')
-        .select('shop_id, role, is_super_admin, shops(name, subscription_status, trial_ends_at, subscription_expires_at, payment_claimed_at)')
+                .select('shop_id, role, is_super_admin, shops(name, subscription_status, trial_ends_at, subscription_expires_at, payment_claimed_at, suspended)')
         .eq('id', session.user.id)
         .single();
 
@@ -102,9 +104,10 @@ async function checkAuth() {
     currentShopStatus = profile.shops?.subscription_status || 'trial';
     currentTrialEndsAt = profile.shops?.trial_ends_at || null;
     currentSubscriptionExpiresAt = profile.shops?.subscription_expires_at || null;
-    isShopActive = computeIsActive(currentShopStatus, currentTrialEndsAt, currentSubscriptionExpiresAt);
     isSuperAdmin = profile.is_super_admin === true;
     currentShopPaymentClaimedAt = profile.shops?.payment_claimed_at || null;
+    currentShopSuspended = profile.shops?.suspended === true;
+    isShopActive = computeIsActive(currentShopStatus, currentTrialEndsAt, currentSubscriptionExpiresAt, currentShopSuspended);
 
     const adminLink = document.getElementById('adminMenuLink');
     if (adminLink && isSuperAdmin) {
