@@ -215,6 +215,15 @@ const translations = {
     shopSuspendedTitle: "تم تعليق حسابك",
     shopSuspendedDesc: "تم تعليق الوصول لهذا المحل من طرف الإدارة. تواصل معنا لمعرفة السبب.",
 
+    // ===== استخدام قاعدة البيانات =====
+    storageTitle: "استخدام قاعدة البيانات",
+    storageUsedOf: "مستعمل من الحد المجاني (500 ميغابايت)",
+    storageByTable: "التوزيع حسب الجدول",
+    storageByShop: "الأكثر استهلاكاً للتخزين",
+    colDataSize: "الحجم التقريبي",
+    storageWarning: "اقتربت من الحد المجاني! فكّر في الترقية لخطة Pro قريباً.",
+    loadingStorage: "جاري حساب الاستخدام...",
+
     // ===== الدفع اليدوي =====
     payManualTitle: "طريقة الدفع",
     payManualDesc: "حوّل المبلغ عبر BaridiMob للرقم التالي، ثم اضغط \"لقد دفعت\"",
@@ -477,6 +486,15 @@ const translations = {
     // ===== Écran de blocage pour atelier suspendu =====
     shopSuspendedTitle: "Votre compte a été suspendu",
     shopSuspendedDesc: "L'accès à cet atelier a été suspendu par l'administration. Contactez-nous pour en connaître la raison.",
+
+    // ===== Utilisation de la base de données =====
+    storageTitle: "Utilisation de la base de données",
+    storageUsedOf: "utilisé sur le quota gratuit (500 Mo)",
+    storageByTable: "Répartition par table",
+    storageByShop: "Plus gros consommateurs de stockage",
+    colDataSize: "Taille approximative",
+    storageWarning: "Vous approchez de la limite gratuite ! Pensez à passer au plan Pro bientôt.",
+    loadingStorage: "Calcul de l'utilisation en cours...",
 
     // ===== Paiement manuel =====
     payManualTitle: "Méthode de paiement",

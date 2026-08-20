@@ -1259,3 +1259,8 @@ body {
 .landing-footer { text-align:center; padding:30px 20px; color:#9ca3af; font-size:.85rem; border-top:1px solid #e5e7eb; margin-top:30px; }
 .landing-footer .lang-switch-footer { display:flex; justify-content:center; gap:10px; margin-top:12px; }
 .landing-footer .lang-switch-footer button { background:#e5e7eb; border:none; padding:5px 14px; border-radius:16px; font-size:.8rem; cursor:pointer; color:#1e2a4a; }
+
+
+.storage-progress-track { background:#f1f5f9; border-radius:10px; overflow:hidden; height:16px; margin:10px 0; }
+.storage-progress-fill { height:100%; background:linear-gradient(90deg,#f0b34b,#dc2626); border-radius:10px; transition:width .4s ease; }
+.storage-progress-fill.safe { background:#23c48d; }

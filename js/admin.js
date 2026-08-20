@@ -77,6 +77,85 @@ async function loadShops() {
 
     renderStats();
     applyFilters();
+    loadStorageInfo();
+}
+
+/**
+ * جلب وعرض معلومات استخدام قاعدة البيانات
+ */
+async function loadStorageInfo() {
+    const lang = document.documentElement.lang || 'ar';
+    const dict = (lang === 'ar') ? translations.ar : translations.fr;
+    const FREE_LIMIT_BYTES = 500 * 1024 * 1024; // 500 ميغابايت
+
+    const [{ data: overview, error: overviewError }, { data: shopsStorage, error: shopsError }] = await Promise.all([
+        supabaseClient.rpc('get_db_overview'),
+        supabaseClient.rpc('get_shops_storage')
+    ]);
+
+    const container = document.getElementById('storageContent');
+
+    if (overviewError || shopsError) {
+        console.error(overviewError || shopsError);
+        container.innerHTML = `<p style="color:#dc2626;">Error loading storage info</p>`;
+        return;
+    }
+
+    const usedBytes = overview.database_size_bytes;
+    const pct = Math.min(100, Math.round((usedBytes / FREE_LIMIT_BYTES) * 100));
+    const isNearLimit = pct >= 80;
+
+    const tablesHtml = (overview.tables || []).map(t => `
+        <div class="report-bar-row">
+            <div class="report-bar-top"><span>${t.name}</span><span>${t.pretty}</span></div>
+            <div class="report-bar-track"><div class="report-bar-fill" style="width:${Math.min(100, Math.round((t.bytes / usedBytes) * 100))}%"></div></div>
+        </div>
+    `).join('');
+
+    const topShops = (shopsStorage || []).slice(0, 8);
+    const shopsHtml = topShops.length > 0 ? `
+        <div class="table-wrapper" style="margin-top:10px;">
+            <table class="clients-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="colShop">المحل</th>
+                        <th data-i18n="colDataSize">الحجم التقريبي</th>
+                        <th data-i18n="detailClients">عملاء</th>
+                        <th data-i18n="detailRepairs">طلبات</th>
+                        <th data-i18n="detailParts">قطع</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${topShops.map(s => `
+                        <tr>
+                            <td>${s.shop_name}</td>
+                            <td>${s.approx_pretty}</td>
+                            <td>${s.clients_count}</td>
+                            <td>${s.repairs_count}</td>
+                            <td>${s.parts_count}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    ` : '';
+
+    container.innerHTML = `
+        <div style="display:flex;justify-content:space-between;font-weight:700;color:#1e2a4a;">
+            <span>${overview.database_size_pretty}</span>
+            <span>${pct}% ${dict.storageUsedOf}</span>
+        </div>
+        <div class="storage-progress-track">
+            <div class="storage-progress-fill ${isNearLimit ? '' : 'safe'}" style="width:${pct}%"></div>
+        </div>
+        ${isNearLimit ? `<p style="color:#dc2626;font-size:0.85rem;font-weight:600;margin-bottom:16px;"><i class="fas fa-triangle-exclamation"></i> ${dict.storageWarning}</p>` : ''}
+
+        <h4 style="margin:20px 0 10px;color:#1e2a4a;font-size:0.95rem;">${dict.storageByTable}</h4>
+        ${tablesHtml}
+
+        <h4 style="margin:24px 0 10px;color:#1e2a4a;font-size:0.95rem;">${dict.storageByShop}</h4>
+        ${shopsHtml}
+    `;
 }
 
 function renderStats() {
